@@ -719,8 +719,12 @@ select option {
 
 @media (max-width: 768px) {
   .hero-img {
-    min-height: 50vw;
-    max-height: 70vh;
+    min-height: 70vh;
+  }
+
+  .hero-photo {
+    content: url('images/hero_sp.jpg');
+    object-position: center top;
   }
   .hero-img-content { padding: 2rem 1.25rem 3rem; }
 
