@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store — Quiet Signal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="images/logo.png" width="120" alt="Quiet Signal" class="nav-logo-img"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="works.html">Works</a></li>
+      <li><a href="sound.html">Sound</a></li>
+      <li><a href="store.html" class="active">Store</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="page-header" data-title="STORE">
+      <p class="section-label">// Shop</p>
+      <h1>Store</h1>
+    </div>
+
+    <div class="container">
+      <div style="max-width: 560px; margin: 0 auto; text-align: center;" class="fade-in">
+
+
+        <!-- 注意書き -->
+        <div style="border: 2px solid #24140e; padding: 1rem 2.1rem; margin-bottom: 2.0rem; background: rgba(255,255,255,0.2);">
+       
+          <p style="font-size: 0.95rem; line-height: 2;">
+            下記をクリックするとBASE内 Quiet Signalページへ移動します。
+          </p>
+          <p style="font-size: 0.8rem; opacity: 0.55; margin-top: 0.75rem; line-height: 1.8;">
+            Click the link below to visit the 【Quiet Signal】page on 【BASE】.
+          </p>
+        </div>
+
+        <!-- BASEへのボタン -->
+        <a href="https://quietsignal.official.ec/" target="_blank" rel="noopener" class="btn" style="font-size:0.8rem; padding: 1rem 3rem;">
+          Quiet Signal Shop へ →
+        </a>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 Quiet Signal. All Rights Reserved.
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Quiet Signal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="images/logo.png" width="120"　alt="Quiet Signal" class="nav-logo-img"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="works.html">Works</a></li>
+      <li><a href="sound.html">Sound</a></li>
+      <li><a href="store.html">Store</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="page-header" data-title="CONTACT">
+      <p class="section-label">// Get in Touch</p>
+      <h1>Contact</h1>
+    </div>
+
+    <div class="container">
+      <div class="contact-wrap fade-in">
+
+        <!-- LEFT INFO -->
+        <div>
+          <p class="section-label">// Reach Us</p>
+          <h2 style="font-size:clamp(1.8rem,4vw,3.5rem); margin-bottom:1.5rem; line-height:1.1;">
+            お問い合わせ
+          </h2>
+          <p style="font-size:0.92rem; line-height:2; opacity:0.72; margin-bottom:2.5rem;">
+            購入のご相談、コラボレーション<br>取材・掲載依頼などはメールかSNSのDMにてご連絡ください。<br>基本的にはカスタムオーダーは行っておりませんが、ご相談下さい。
+          </p>
+
+          <div style="margin-bottom:1.5rem;">
+            <p class="section-label">// Email</p>
+            <p style="font-family:'var(--font-mono)',monospace; font-size:0.82rem; letter-spacing:0.08em;">quietsignal.effects@gmail.com</p>
+          </div>
+
+
+
+          <div style="margin-bottom:1.5rem;">
+            <p class="section-label">// Social</p>
+            <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+              <a href="https://www.instagram.com/quietsignal_effects" target="_blank" rel="noopener" class="tag" style="text-decoration:none;">Instagram</a>
+              <a href="https://www.youtube.com/@italian_effects" target="_blank" rel="noopener" class="tag" style="text-decoration:none;">YouTube</a>
+            </div>
+          </div>
+
+       
+        </div>
+
+        <!-- RIGHT FORM -->
+        <div>
+          <p class="section-label">// Message Form</p>
+          <div id="contact-form">
+            <div class="form-group">
+              <label for="name">お名前 / Name</label>
+              <input type="text" id="name" placeholder="Shingou Shizuka">
+            </div>
+
+            <div class="form-group">
+              <label for="email">メールアドレス / Email</label>
+              <input type="email" id="email" placeholder="your@email.com">
+            </div>
+
+            <div class="form-group">
+              <label for="subject">件名 / Subject</label>
+              <select id="subject">
+                <option value="">選択してください</option>
+                <option value="purchase">製品・購入について / Product・Purchase Inquiry</option>
+                <option value="custom">修理・不具合・サポート / Repair・Support</option>
+                <option value="custom">カスタムオーダー / Custom Order</option>
+                <option value="collab">コラボレーション / Collaboration</option>
+                <option value="press">取材・掲載 / Press</option>
+                <option value="other">その他 / Other</option>
+
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="message">メッセージ / Message</label>
+              <textarea id="message" placeholder="ご質問・ご要望をお書きください..."></textarea>
+            </div>
+
+            <button onclick="submitForm()" class="btn" style="width:100%; text-align:center; cursor:pointer; border:none; font-family:'Space Mono',monospace; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; padding:1rem; background:#24140e; color:#b0e0e6;">
+              Send Message →
+            </button>
+          </div>
+
+          <!-- SUCCESS STATE -->
+          <div id="success-msg" style="display:none; border:2px solid #24140e; padding:2.5rem; text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:3rem; letter-spacing:0.1em; margin-bottom:0.5rem;">Signal Sent</div>
+            <p style="font-size:0.88rem; opacity:0.7; line-height:1.8;">
+              メッセージを受信しました。<br>2〜3営業日以内にご返信いたします。<br>Thank you for reaching out.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 Quiet Signal. All Rights Reserved.
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    function submitForm() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+      if (!name || !email || !message) {
+        alert('お名前、メールアドレス、メッセージは必須です。');
+        return;
+      }
+      document.getElementById('contact-form').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

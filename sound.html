@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sound — Quiet Signal</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .sound-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 0;
+      border: 2px solid #24140e;
+    }
+
+    .track-list { border-right: 2px solid #24140e; }
+
+    .track-list-header {
+      padding: 1.1rem 1.5rem;
+      border-bottom: 2px solid #24140e;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+
+    .track-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid rgba(36,20,14,0.15);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .track-item:last-child { border-bottom: none; }
+    .track-item:hover { background: rgba(255,255,255,0.3); }
+    .track-item.active { background: #24140e; color: #b0e0e6; }
+
+    .t-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      line-height: 1;
+      min-width: 2rem;
+      opacity: 0.25;
+      color: inherit;
+    }
+    .track-item.active .t-num { opacity: 0.4; }
+
+    .t-info { flex: 1; }
+
+    .t-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      line-height: 1.4;
+      margin-bottom: 0.2rem;
+    }
+
+    .t-desc { font-size: 0.75rem; opacity: 0.55; }
+    .track-item.active .t-desc { opacity: 0.6; }
+
+    .dot {
+      display: none;
+      width: 6px;
+      height: 6px;
+      background: #b0e0e6;
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+    .track-item.active .dot { display: block; }
+
+    @keyframes blink {
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.3; transform:scale(0.65); }
+    }
+
+    .player-area { display: flex; flex-direction: column; }
+
+    .player-titlebar {
+      padding: 1.1rem 1.5rem;
+      border-bottom: 2px solid #24140e;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .now-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.38;
+      white-space: nowrap;
+    }
+
+    .current-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── サムネイル＋再生ボタン方式 ── */
+    .yt-wrap {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #24140e;
+      overflow: hidden;
+    }
+
+    /* サムネイル画像 */
+    .yt-thumb {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.3s;
+    }
+
+    /* 薄いオーバーレイ */
+    .yt-thumb-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(36,20,14,0.35);
+      transition: background 0.3s;
+    }
+
+    .yt-wrap:hover .yt-thumb-overlay {
+      background: rgba(36,20,14,0.2);
+    }
+
+    /* 再生ボタン */
+    .yt-play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 72px;
+      height: 72px;
+      background: rgba(176,224,230,0.92);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      z-index: 2;
+    }
+
+    .yt-wrap:hover .yt-play-btn {
+      transform: translate(-50%, -50%) scale(1.1);
+      background: #b0e0e6;
+    }
+
+    .yt-play-btn::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 12px 0 12px 22px;
+      border-color: transparent transparent transparent #24140e;
+      margin-left: 4px;
+    }
+
+    /* iframe（クリック後に差し込む） */
+    .yt-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 3;
+    }
+
+    /* 初期プレースホルダー（未選択時） */
+    .placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      z-index: 1;
+    }
+
+    .ph-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      color: rgba(176,224,230,0.1);
+      letter-spacing: 0.1em;
+      line-height: 1;
+    }
+
+    .ph-hint {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      color: rgba(176,224,230,0.3);
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 768px) {
+      .sound-layout { grid-template-columns: 1fr; }
+      .track-list { border-right: none; border-bottom: 2px solid #24140e; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="images/logo.png" width="120" alt="Quiet Signal" class="nav-logo-img"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="works.html">Works</a></li>
+      <li><a href="sound.html" class="active">Sound</a></li>
+      <li><a href="store.html">Store</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="page-header" data-title="SOUND">
+      <p class="section-label">// Demo Tracks</p>
+      <h1>Sound</h1>
+    </div>
+
+    <div class="container">
+      <p style="font-size:0.88rem; opacity:0.65; margin-bottom:2rem;">
+        各エフェクターのデモ映像です。左のリストから選び、再生ボタンをクリックしてください。
+      </p>
+
+      <div class="sound-layout fade-in">
+
+        <!-- 左：リスト -->
+        <div class="track-list">
+          <div class="track-list-header">// Playlist</div>
+
+          <div class="track-item" onclick="selectTrack(0)" id="track-0">
+            <div class="t-num">01</div>
+            <div class="t-info">
+              <div class="t-title">Sholine Bass Preamp</div>
+              <div class="t-desc">BASS用歪みとクリーンをブレンド可能なプリアンプ</div>
+            </div>
+            <div class="dot"></div>
+          </div>
+
+          <div class="track-item" onclick="selectTrack(1)" id="track-1">
+            <div class="t-num">02</div>
+            <div class="t-info">
+              <div class="t-title">Double Face Fuzz</div>
+              <div class="t-desc">Fuzz Face系とBig Muff系を融合させたFuzz</div>
+            </div>
+            <div class="dot"></div>
+          </div>
+
+          <div class="track-item" onclick="selectTrack(2)" id="track-2">
+            <div class="t-num">03</div>
+            <div class="t-info">
+              <div class="t-title">Super Stong Tone Machine</div>
+              <div class="t-desc">アッパーオクターブファズfoxx社Tone Machineをモデルにしたファズ</div>
+            </div>
+            <div class="dot"></div>
+          </div>
+
+          <div class="track-item" onclick="selectTrack(3)" id="track-3">
+            <div class="t-num">04</div>
+            <div class="t-info">
+              <div class="t-title">Super Famicom Delay</div>
+              <div class="t-desc">ゲーム機を筐体にしたディレイ。リセットボタンで発振、電源スイッチONで強制ショートディレイになる。</div>
+            </div>
+            <div class="dot"></div>
+          </div>
+        </div>
+
+        <!-- 右：プレイヤー -->
+        <div class="player-area">
+          <div class="player-titlebar">
+            <span class="now-label">Now Playing</span>
+            <span class="current-title" id="current-title">— SELECT A TRACK —</span>
+          </div>
+          <div class="yt-wrap" id="yt-wrap">
+            <!-- 未選択時プレースホルダー -->
+            <div class="placeholder" id="placeholder">
+              <div class="ph-logo">QS</div>
+              <div class="ph-hint">← Select a track to play</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 Quiet Signal. All Rights Reserved.
+  </footer>
+
+  <script>
+    const tracks = [
+      { title: 'Sholine Bass Preamp',  videoId: '9375TeLefnA' },
+      { title: 'Double Face Fuzz',   videoId: '1ibwY5JWl5A' },
+      { title: 'Super Stong Tone Machine',  videoId: '8TAAMLckjqw' },
+      { title: 'Super Famicom Delay',  videoId: 'nnAaHIee9bQ' },
+    ];
+
+    let current = null;
+
+    function selectTrack(idx) {
+      // アクティブ切り替え
+      if (current !== null) {
+        document.getElementById('track-' + current).classList.remove('active');
+      }
+      current = idx;
+      document.getElementById('track-' + idx).classList.add('active');
+      document.getElementById('current-title').textContent = tracks[idx].title;
+
+      // プレースホルダーを消してサムネイル＋再生ボタンを表示
+      const wrap = document.getElementById('yt-wrap');
+      const videoId = tracks[idx].videoId;
+
+      wrap.innerHTML = `
+        <img
+          class="yt-thumb"
+          src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg"
+          onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'"
+          alt="${tracks[idx].title}">
+        <div class="yt-thumb-overlay"></div>
+        <div class="yt-play-btn" onclick="loadPlayer('${videoId}')"></div>
+      `;
+    }
+
+    function loadPlayer(videoId) {
+      // 再生ボタンを押したらiframeに差し替え（autoplayなし、ユーザー操作で再生）
+      const wrap = document.getElementById('yt-wrap');
+      wrap.innerHTML = `
+        <iframe
+          src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      `;
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

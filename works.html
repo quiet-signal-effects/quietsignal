@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — Quiet Signal</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .works-item {
+      border: 2px solid #24140e;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .works-img {
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: #b0e0e6;
+      position: relative;
+    }
+
+    .works-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .works-item:hover .works-img img {
+      transform: scale(1.05);
+    }
+
+    .works-info {
+      padding: 1.25rem;
+      border-top: 2px solid #24140e;
+    }
+
+    .works-info h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.25rem;
+    }
+
+    .works-info p {
+      font-size: 0.8rem;
+      opacity: 0.6;
+      line-height: 1.6;
+      margin-bottom: 0.6rem;
+    }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(36,20,14,0.92);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox-inner {
+      position: relative;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .lightbox-inner img {
+      width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      display: block;
+      border: 2px solid rgba(176,224,230,0.2);
+    }
+
+    .lightbox-caption {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: rgba(176,224,230,0.7);
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -2.5rem;
+      right: 0;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: rgba(176,224,230,0.6);
+      cursor: pointer;
+      text-transform: uppercase;
+      background: none;
+      border: none;
+    }
+
+    .lightbox-close:hover { color: #b0e0e6; }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(176,224,230,0.15);
+      border: 1px solid rgba(176,224,230,0.3);
+      color: #b0e0e6;
+      font-size: 1.2rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .lightbox-nav:hover { background: rgba(176,224,230,0.3); }
+    .lightbox-prev { left: -3.5rem; }
+    .lightbox-next { right: -3.5rem; }
+
+    @media (max-width: 768px) {
+      .works-grid { grid-template-columns: repeat(2, 1fr); }
+      .lightbox-prev { left: 0; }
+      .lightbox-next { right: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .works-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="images/logo.png" width="120" alt="Quiet Signal" class="nav-logo-img"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="works.html" class="active">Works</a></li>
+      <li><a href="sound.html">Sound</a></li>
+      <li><a href="store.html">Store</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="page-header" data-title="WORKS">
+      <p class="section-label">// Portfolio</p>
+      <h1>Works</h1>
+    </div>
+
+    <div class="container">
+
+      <!-- フィルター -->
+      <div style="display:flex; gap:0.75rem; margin-bottom:2.5rem; flex-wrap:wrap;" class="fade-in">
+        <button onclick="filterWorks('all', this)" class="tag" style="cursor:pointer; background:#24140e; color:#b0e0e6; border-color:#24140e;">All</button>
+        <button onclick="filterWorks('fuzz', this)" class="tag" style="cursor:pointer;">Fuzz</button>
+        <button onclick="filterWorks('delay', this)" class="tag" style="cursor:pointer;">Delay</button>
+        <button onclick="filterWorks('chorus', this)" class="tag" style="cursor:pointer;">Chorus</button>
+        <button onclick="filterWorks('bass', this)" class="tag" style="cursor:pointer;">Bass</button>
+        <button onclick="filterWorks('etc', this)" class="tag" style="cursor:pointer;">Etc</button>
+      </div>
+
+      <!-- グリッド -->
+      <div class="works-grid" id="works-grid">
+
+        <div class="works-item fade-in" data-category="delay" onclick="openLightbox(0)">
+          <div class="works-img">
+            <img src="images/works/01Super_famicon_Delay.jpg" alt="Super Famicom Delay">
+          </div>
+          <div class="works-info">
+            <p class="section-label">Delay / Custom</p>
+            <h3>Super Famicom Delay</h3>
+            <p>スーパーファミコン筐体を使ったディレイ。<br>リセットボタンで発振。</p>
+            <span class="tag">Delay</span><span class="tag">Custom</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="delay" data-category="chorus" onclick="openLightbox(1)">
+          <div class="works-img">
+            <img src="images/works/02GAS_ECHORUS.JPG" alt="GAS ECHORUS">
+          </div>
+          <div class="works-info">
+            <p class="section-label">Chorus / Custom</p>
+            <h3>GAS ECHORUS</h3>
+            <p>ガスカートリッジ筐体を使ったモジュレーションディレイ。<br>TC楽器第3回改造エフェクターコンテスト【グランプリ】受賞作</p>
+            <span class="tag">Chorus</span><span class="tag">Custom</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="bass" onclick="openLightbox(2)">
+          <div class="works-img">
+            <img src="images/works/03River_Bass_Preamp_Driver.jpeg" alt="River Bass Preamp Driver">
+          </div>
+          <div class="works-info">
+            <p class="section-label">Bass Preamp / 2025</p>
+            <h3>River Bass Preamp Driver</h3>
+            <p>奥大井OVERDRIVE2025エフェクターコンテスト グランプリ受賞作。ベースプリアンプ</p>
+            <span class="tag">Bass</span><span class="tag">Award</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(3)">
+          <div class="works-img">
+            <img src="images/works/04FuzzKOJO.jpg" alt="Fuzz KOJO">
+          </div>
+          <div class="works-info">
+            <p class="section-label">Fuzz</p>
+            <h3>Fuzz KOJO</h3>
+            <p>五角形筐体の発信系ファズ。発振防止とFATスイッチ搭載</p>
+            <span class="tag">Fuzz</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(4)">
+          <div class="works-img">
+            <img src="images/works/05doublefacefuzz.jpg" alt="Double Face Fuzz">
+          </div>
+          <div class="works-info">
+            <p class="section-label">Fuzz</p>
+            <h3>Double Face Fuzz</h3>
+            <p>2種類のファズ回路を搭載したデュアルファズ。ビジュアルもサウンドもダブルフェイス</p>
+            <span class="tag">Fuzz</span><span class="tag">Dual</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="bass" onclick="openLightbox(5)">
+          <div class="works-img">
+            <img src="images/works/06shoreline_bass_preamp.jpg" alt="Shoreline Bass Preamp">
+          </div>
+          <div class="works-info">
+            <p class="section-label">Bass Preamp</p>
+            <h3>Shoreline Bass Preamp</h3>
+            <p>海岸線に入り混じる淡水と海水、波打ち際の陸と水、ブレンド大事なベースプリアンプ。</p>
+            <span class="tag">Bass</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(6)">
+          <div class="works-img">
+            <img src="images/works/07Octave-fuzz.jpg" alt="Super Strong Tone Machine Octave Fuzz">
+          </div>
+          <div class="works-info">
+            <p class="section-label">Fuzz / Octave</p>
+            <h3>Super Strong Tone Machine</h3>
+            <p>オクターブ機能搭載のファズ。FOXX社トーンマシーンがベース。ツマミが増えてスーパーストロングの覆面に。</p>
+            <span class="tag">Fuzz</span><span class="tag">Octave</span><span class="tag">Award</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(7)">
+          <div class="works-img">
+            <img src="images/works/08ObenToneBender.jpeg" alt="Oben Tone Bender">
+          </div>
+          <div class="works-info">
+            <p class="section-label">Fuzz</p>
+            <h3>Oben Tone Bender</h3>
+            <p>娘のお弁当箱を使った楕円形筐体のトーンベンダー系ファズ。</p>
+            <span class="tag">Fuzz</span><span class="tag">Tonebender</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="chorus" onclick="openLightbox(8)">
+          <div class="works-img">
+            <img src="images/works/09Cocacolas.jpg" alt="Coca-Cola Chorus">
+          </div>
+          <div class="works-info">
+            <p class="section-label">Chorus / Custom</p>
+            <h3>Coca-Cola Chorus</h3>
+            <p>コカ・コーラのコップ筐体のコーラス。ＣＥ２ベース</p>
+            <span class="tag">Chorus</span><span class="tag">Custom</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ライトボックス -->
+  <div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
+      <button class="lightbox-nav lightbox-prev" onclick="navLightbox(-1)">&#8592;</button>
+      <button class="lightbox-nav lightbox-next" onclick="navLightbox(1)">&#8594;</button>
+      <img id="lightbox-img" src="" alt="">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Quiet Signal. All Rights Reserved.
+  </footer>
+
+  <script>
+    const works = [
+      { src: 'images/works/01Super_famicon_Delay.jpg',       caption: 'Super Famicom Delay' },
+      { src: 'images/works/02GAS_ECHORUS.JPG',               caption: 'GAS ECHORUS' },
+      { src: 'images/works/03River_Bass_Preamp_Driver.jpeg', caption: 'River Bass Preamp Driver' },
+      { src: 'images/works/04FuzzKOJO.jpg',                  caption: 'Fuzz KOJO' },
+      { src: 'images/works/05doublefacefuzz.jpg',            caption: 'Double Face Fuzz' },
+      { src: 'images/works/06shoreline_bass_preamp.jpg',     caption: 'Shoreline Bass Preamp' },
+      { src: 'images/works/07Octave-fuzz.jpg',               caption: 'Super Strong Tone Machine' },
+      { src: 'images/works/08ObenToneBender.jpeg',           caption: 'Oben Tone Bender' },
+      { src: 'images/works/09Cocacolas.jpg',                 caption: 'Coca-Cola Chorus' },
+    ];
+
+    let currentIdx = 0;
+
+    function openLightbox(idx) {
+      currentIdx = idx;
+      document.getElementById('lightbox-img').src = works[idx].src;
+      document.getElementById('lightbox-img').alt = works[idx].caption;
+      document.getElementById('lightbox-caption').textContent = works[idx].caption;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeLightboxOutside(e) {
+      if (e.target === document.getElementById('lightbox')) closeLightbox();
+    }
+
+    function navLightbox(dir) {
+      currentIdx = (currentIdx + dir + works.length) % works.length;
+      document.getElementById('lightbox-img').src = works[currentIdx].src;
+      document.getElementById('lightbox-img').alt = works[currentIdx].caption;
+      document.getElementById('lightbox-caption').textContent = works[currentIdx].caption;
+    }
+
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navLightbox(-1);
+      if (e.key === 'ArrowRight') navLightbox(1);
+    });
+
+    function filterWorks(cat, btn) {
+      document.querySelectorAll('#works-grid [data-category]').forEach(item => {
+        item.style.display = (cat === 'all' || item.dataset.category === cat) ? '' : 'none';
+      });
+      document.querySelectorAll('[onclick^="filterWorks"]').forEach(b => {
+        b.style.background = 'transparent';
+        b.style.color = '#24140e';
+        b.style.borderColor = '#24140e';
+      });
+      btn.style.background = '#24140e';
+      btn.style.color = '#b0e0e6';
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

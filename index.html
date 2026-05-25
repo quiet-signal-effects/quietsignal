@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiet Signal — Handcrafted Effects</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Hina+Mincho&display=swap" rel="stylesheet">
+  <style>
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    /* ヒーロー画像を小さめに */
+    .hero-img {
+      min-height: 80vh;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="images/logo.png" width="120" alt="Quiet Signal" class="nav-logo-img"></a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="works.html">Works</a></li>
+      <li><a href="sound.html">Sound</a></li>
+      <li><a href="store.html">Store</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <main>
+    <!-- HERO -->
+    <section class="hero hero-img">
+      <div class="hero-img-wrap">
+        <img src="images/hero.jpg" alt="Quiet Signal — Handcrafted Effects" class="hero-photo">
+        <div class="hero-img-overlay"></div>
+        <div style="position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:center; padding-top:1.5rem; text-align:center; pointer-events:none;">
+          <p style="font-family:'Zen Maru Gothic',serif; font-size:1.1rem; line-height:1.5; color:#f0f8ff; text-shadow: 0 1px 6px rgba(0,0,0,0.4);">
+          Make your Own Noise!
+          </p>
+        </div>
+      </div>
+      <div class="hero-img-content">
+        <div>
+          <a href="store.html" class="btn">Visit Store</a>
+          <a href="works.html" class="btn btn-outline" style="margin-left:1rem;">View Works</a>
+        </div>
+        <p class="hero-eyebrow" style="margin-top:1.2rem; margin-bottom:0; opacity:1; font-weight:700;">Handcrafted Effects — Mie, Japan</p>
+      </div>
+    </section>
+    <!-- TICKER -->
+    <div style="border-top:2px solid #24140e; border-bottom:2px solid #24140e; overflow:hidden; white-space:nowrap; background:rgba(255,255,255,0.12);">
+      <div style="display:inline-block; animation: ticker 22s linear infinite; padding: 0.7rem 0; font-family:'Space Mono',monospace; font-size:0.68rem; letter-spacing:0.2em;">
+        &nbsp;現在STOREは準備中です、もうしばらくお待ちください。&nbsp;&nbsp;&nbsp;— &nbsp;&nbsp;&nbsp;The store is currently in preparation. Please check back soon.&nbsp;&nbsp;&nbsp;— &nbsp;&nbsp;&nbsp;現在STOREは準備中です、もうしばらくお待ちください。&nbsp;&nbsp;&nbsp;— &nbsp;&nbsp;&nbsp;The store is currently in preparation. Please check back soon.&nbsp;&nbsp;&nbsp;— &nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+    <!-- ABOUT TEASER -->
+    <section class="container">
+      <div class="about-intro fade-in">
+        <div style="border:2px solid #24140e; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#b0e0e6;">
+          <video autoplay muted loop playsinline style="width:60%; height:60%; object-fit:cover; display:block;">
+            <source src="videos/intro.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="about-text">
+          <p class="section-label">// About</p>
+          <h2>Quiet Signalとは</h2>
+          <p>
+            Quiet Signalは三重県を拠点に、ハンドビルドでギター用エフェクターを製作しているブランドです。回路設計から外装デザインまで一貫して行い、一台一台丁寧に仕上げています。
+          </p>
+          <a href="about.html" class="btn">続き read more</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    &copy; 2025 Quiet Signal. All Rights Reserved.
+  </footer>
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+<script data-goatcounter="https://quietsignal.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
