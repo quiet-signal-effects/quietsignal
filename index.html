@@ -28,6 +28,9 @@
       <li><a href="store.html">Store</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
+    <button class="nav-hamburger" onclick="toggleMenu()" aria-label="メニュー">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
   <main>
     <!-- HERO -->
@@ -83,7 +86,16 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
-<script data-goatcounter="https://quietsignal.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+  <script>
+    function toggleMenu() {
+      document.querySelector('.nav-links').classList.toggle('open');
+    }
+    // メニュー外クリックで閉じる
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('nav')) {
+        document.querySelector('.nav-links').classList.remove('open');
+      }
+    });
+  </script>
 </body>
 </html>

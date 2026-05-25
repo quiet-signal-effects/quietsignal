@@ -84,6 +84,10 @@ nav {
   align-items: center;
 }
 
+.nav-hamburger {
+  display: none;
+}
+
 .nav-links a {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -563,14 +567,60 @@ select option {
 @media (max-width: 768px) {
   nav {
     padding: 0 1.25rem;
+    height: 56px;
+    position: relative;
   }
 
+  .nav-logo-img {
+    width: 80px !important;
+    height: auto !important;
+  }
+
+  /* ハンバーガーボタン */
+  .nav-hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--black);
+    transition: all 0.3s;
+  }
+
+  /* メニューをドロップダウンに */
   .nav-links {
-    gap: 1rem;
+    display: none;
+    position: absolute;
+    top: 56px;
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    border-bottom: 2px solid var(--black);
+    flex-direction: column;
+    gap: 0;
+    z-index: 200;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links li {
+    border-bottom: 1px solid rgba(36,20,14,0.15);
   }
 
   .nav-links a {
-    font-size: 0.62rem;
+    display: block;
+    padding: 1rem 1.25rem;
+    font-size: 11px;
   }
 
   .grid-2, .grid-3, .about-intro, .contact-wrap {
@@ -668,6 +718,13 @@ select option {
 }
 
 @media (max-width: 768px) {
-  .nav-logo-img { height: 28px; }
-  .hero-img-content { padding: 2rem 1.25rem; }
+  .hero-img {
+    min-height: 60vh;
+  }
+  .hero-img-content { padding: 2rem 1.25rem 3rem; }
+
+  /* ABOUTの製作者セクション縦並び */
+  div[style*="display:flex"][style*="gap:1.5rem"] {
+    flex-direction: column;
+  }
 }
