@@ -67,7 +67,7 @@
       margin-bottom: 0.6rem;
     }
 
-    /* ── LIGHTBOX ── */
+    /* LIGHTBOX */
     .lightbox {
       display: none;
       position: fixed;
@@ -78,17 +78,12 @@
       justify-content: center;
       padding: 2rem;
     }
-
-    .lightbox.open {
-      display: flex;
-    }
-
+    .lightbox.open { display: flex; }
     .lightbox-inner {
       position: relative;
       max-width: 800px;
       width: 100%;
     }
-
     .lightbox-inner img {
       width: 100%;
       max-height: 80vh;
@@ -96,7 +91,6 @@
       display: block;
       border: 2px solid rgba(176,224,230,0.2);
     }
-
     .lightbox-caption {
       font-family: 'Space Mono', monospace;
       font-size: 0.72rem;
@@ -105,7 +99,6 @@
       margin-top: 1rem;
       text-align: center;
     }
-
     .lightbox-close {
       position: absolute;
       top: -2.5rem;
@@ -119,9 +112,7 @@
       background: none;
       border: none;
     }
-
     .lightbox-close:hover { color: #b0e0e6; }
-
     .lightbox-nav {
       position: absolute;
       top: 50%;
@@ -138,7 +129,6 @@
       cursor: pointer;
       transition: background 0.2s;
     }
-
     .lightbox-nav:hover { background: rgba(176,224,230,0.3); }
     .lightbox-prev { left: -3.5rem; }
     .lightbox-next { right: -3.5rem; }
@@ -148,7 +138,6 @@
       .lightbox-prev { left: 0; }
       .lightbox-next { right: 0; }
     }
-
     @media (max-width: 480px) {
       .works-grid { grid-template-columns: 1fr; }
     }
@@ -182,123 +171,308 @@
       <!-- フィルター -->
       <div style="display:flex; gap:0.75rem; margin-bottom:2.5rem; flex-wrap:wrap;" class="fade-in">
         <button onclick="filterWorks('all', this)" class="tag" style="cursor:pointer; background:#24140e; color:#b0e0e6; border-color:#24140e;">All</button>
+        <button onclick="filterWorks('drive', this)" class="tag" style="cursor:pointer;">Drive</button>
         <button onclick="filterWorks('fuzz', this)" class="tag" style="cursor:pointer;">Fuzz</button>
-        <button onclick="filterWorks('delay', this)" class="tag" style="cursor:pointer;">Delay</button>
-        <button onclick="filterWorks('chorus', this)" class="tag" style="cursor:pointer;">Chorus</button>
+        <button onclick="filterWorks('delay', this)" class="tag" style="cursor:pointer;">Delay Reverb</button>
         <button onclick="filterWorks('bass', this)" class="tag" style="cursor:pointer;">Bass</button>
-        <button onclick="filterWorks('etc', this)" class="tag" style="cursor:pointer;">Etc</button>
+        <button onclick="filterWorks('modulation', this)" class="tag" style="cursor:pointer;">Modulation</button>
+        <button onclick="filterWorks('other', this)" class="tag" style="cursor:pointer;">Other</button>
       </div>
 
-      <!-- グリッド -->
       <div class="works-grid" id="works-grid">
 
+        <!-- 既存9作品 -->
         <div class="works-item fade-in" data-category="delay" onclick="openLightbox(0)">
-          <div class="works-img">
-            <img src="images/works/01Super_famicon_Delay.jpg" alt="Super Famicom Delay">
-          </div>
+          <div class="works-img"><img src="images/works/01Super_famicon_Delay.jpg" alt="Super Famicom Delay"></div>
           <div class="works-info">
             <p class="section-label">Delay / Custom</p>
             <h3>Super Famicom Delay</h3>
-            <p>スーパーファミコン筐体を使ったディレイ。<br>リセットボタンで発振。</p>
-            <span class="tag">Delay</span><span class="tag">Custom</span>
+            <p>スーパーファミコン筐体を使ったディレイ。<br>リセットボタン長押しで発振。電源ボタンONで強制ショートディレイになる。</p>
+            <span class="tag">Delay Reverb</span>
           </div>
         </div>
 
-        <div class="works-item fade-in" data-category="delay" data-category="chorus" onclick="openLightbox(1)">
-          <div class="works-img">
-            <img src="images/works/02GAS_ECHORUS.jpg" alt="GAS ECHORUS">
-          </div>
+        <div class="works-item fade-in" data-category="chorus" onclick="openLightbox(1)">
+          <div class="works-img"><img src="images/works/02GAS_ECHORUS.jpg" alt="GAS ECHORUS"></div>
           <div class="works-info">
-            <p class="section-label">Chorus / Custom</p>
+            <p class="section-label">Delay + Chorus/ Custom</p>
             <h3>GAS ECHORUS</h3>
-            <p>ガスカートリッジ筐体を使ったモジュレーションディレイ。<br>TC楽器第3回改造エフェクターコンテスト【グランプリ】受賞作</p>
-            <span class="tag">Chorus</span><span class="tag">Custom</span>
+            <p>ガスカートリッジ筐体のモジュレーションディレイ。TC楽器第３回改造エフェクターコンテストで【ギターマガジン賞】受賞。</p>
+            <span class="tag">Delay Reverb</span>
           </div>
         </div>
 
         <div class="works-item fade-in" data-category="bass" onclick="openLightbox(2)">
-          <div class="works-img">
-            <img src="images/works/03River_Bass_Preamp_Driver.jpeg" alt="River Bass Preamp Driver">
-          </div>
+          <div class="works-img"><img src="images/works/03River_Bass_Preamp_Driver.jpeg" alt="River"></div>
           <div class="works-info">
-            <p class="section-label">Bass Preamp / 2025</p>
+            <p class="section-label">Bass Preamp</p>
             <h3>River Bass Preamp Driver</h3>
-            <p>奥大井OVERDRIVE2025エフェクターコンテスト グランプリ受賞作。ベースプリアンプ</p>
-            <span class="tag">Bass</span><span class="tag">Award</span>
+            <p>奥大井OVERDRIVE2025【グランプリ】受賞作。２段階のDRIVE SW/Don-Shari Sw初搭載</p>
+            <span class="tag">Bass</span>
           </div>
         </div>
 
         <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(3)">
-          <div class="works-img">
-            <img src="images/works/04FuzzKOJO.jpg" alt="Fuzz KOJO">
-          </div>
+          <div class="works-img"><img src="images/works/04FuzzKOJO.jpg" alt="Fuzz KOJO"></div>
           <div class="works-info">
             <p class="section-label">Fuzz</p>
             <h3>Fuzz KOJO</h3>
-            <p>五角形筐体の発信系ファズ。発振防止とFATスイッチ搭載</p>
+            <p>五角形筐体の発振系ファズ。ファズファクトリー系</p>
             <span class="tag">Fuzz</span>
+          </div>
+
+        </div>
+        <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(28)">
+          <div class="works-img"><img src="images/works/05deathmetalslime.jpg" alt="Death Metal Slime"></div>
+          <div class="works-info">
+            <p class="section-label">Drive / Metal</p>
+            <h3>Death Metal Slime</h3>
+            <p>メタルの音を出すためのスライムのお菓子缶ペダル。<br>回路ベースはデスメタル</p>
+            <span class="tag">Drive</span>
           </div>
         </div>
 
         <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(4)">
-          <div class="works-img">
-            <img src="images/works/05doublefacefuzz.jpg" alt="Double Face Fuzz">
-          </div>
+          <div class="works-img"><img src="images/works/05doublefacefuzz.jpg" alt="Double Face Fuzz"></div>
           <div class="works-info">
-            <p class="section-label">Fuzz</p>
+            <p class="section-label">Fuzz /Dual</p>
             <h3>Double Face Fuzz</h3>
-            <p>2種類のファズ回路を搭載したデュアルファズ。ビジュアルもサウンドもダブルフェイス</p>
-            <span class="tag">Fuzz</span><span class="tag">Dual</span>
+            <p>Fuzz Face系とBig Muff系のデュアルモードを備えた２重人格ファズ</p>
+            <span class="tag">Fuzz</span>
           </div>
         </div>
 
         <div class="works-item fade-in" data-category="bass" onclick="openLightbox(5)">
-          <div class="works-img">
-            <img src="images/works/06shoreline_bass_preamp.jpg" alt="Shoreline Bass Preamp">
-          </div>
+          <div class="works-img"><img src="images/works/06shoreline_bass_preamp.jpg" alt="Shoreline Bass Preamp"></div>
           <div class="works-info">
             <p class="section-label">Bass Preamp</p>
             <h3>Shoreline Bass Preamp</h3>
-            <p>海岸線に入り混じる淡水と海水、波打ち際の陸と水、ブレンド大事なベースプリアンプ。</p>
+            <p>海岸線をイメージしたベースプリアンプ。<br>CleanとDriveのblend機能、Baxandall EQ回路</p>
             <span class="tag">Bass</span>
           </div>
         </div>
 
         <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(6)">
-          <div class="works-img">
-            <img src="images/works/07Octave-fuzz.jpg" alt="Super Strong Tone Machine Octave Fuzz">
-          </div>
+          <div class="works-img"><img src="images/works/07Octave-fuzz.jpg" alt="Super Strong Tone Machine"></div>
           <div class="works-info">
-            <p class="section-label">Fuzz / Octave</p>
+            <p class="section-label">Fuzz / Upper Octave</p>
             <h3>Super Strong Tone Machine</h3>
-            <p>オクターブ機能搭載のファズ。FOXX社トーンマシーンがベース。ツマミが増えてスーパーストロングの覆面に。</p>
-            <span class="tag">Fuzz</span><span class="tag">Octave</span><span class="tag">Award</span>
-          </div>
+            <p>アッパーオクターブファズ。<br>foxx社トーンマシーンがベース。レスラーがデザインのモデル</p>
+            <span class="tag">Fuzz</span>          </div>
         </div>
 
         <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(7)">
-          <div class="works-img">
-            <img src="images/works/08ObenToneBender.jpeg" alt="Oben Tone Bender">
-          </div>
+          <div class="works-img"><img src="images/works/08ObenToneBender.jpeg" alt="Oben Tone Bender"></div>
           <div class="works-info">
             <p class="section-label">Fuzz</p>
             <h3>Oben Tone Bender</h3>
-            <p>娘のお弁当箱を使った楕円形筐体のトーンベンダー系ファズ。</p>
-            <span class="tag">Fuzz</span><span class="tag">Tonebender</span>
+            <p>楕円形お弁当筐体のトーンベンダー系ファズ。</p>
+            <span class="tag">Fuzz</span>
           </div>
         </div>
 
         <div class="works-item fade-in" data-category="chorus" onclick="openLightbox(8)">
-          <div class="works-img">
-            <img src="images/works/09Cocacolas.jpg" alt="Coca-Cola Chorus">
-          </div>
+          <div class="works-img"><img src="images/works/09Cocacolas.jpg" alt="Coca-Cola Chorus"></div>
           <div class="works-info">
             <p class="section-label">Chorus / Custom</p>
             <h3>Coca-Cola Chorus</h3>
-            <p>コカ・コーラのコップ筐体のコーラス。ＣＥ２ベース</p>
-            <span class="tag">Chorus</span><span class="tag">Custom</span>
+            <p>コカ・コーラのコップ筐体のコーラス。CE2ベース。フタは美杉の杉材</p>
+            <span class="tag">Modulation</span>
           </div>
         </div>
+
+        <!-- 新規追加作品 -->
+        <div class="works-item fade-in" data-category="drive" onclick="openLightbox(9)">
+          <div class="works-img"><img src="images/works/10kasiwa-centur.jpg" alt="Tetsu Kashiwa 75th Anniversary Drive"></div>
+          <div class="works-info">
+            <p class="section-label">Drive</p>
+            <h3>Tetsu Kashiwa 75th Anniversary Drive</h3>
+            <p>Tetsu Kashiwa氏のアニバーサリーモデル。centaurがベース</p>
+            <span class="tag">Drive</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(10)">
+          <div class="works-img"><img src="images/works/11bigmuffviolet.jpg" alt="Big Muff Ram's Head Violet"></div>
+          <div class="works-info">
+            <p class="section-label">Fuzz</p>
+            <h3>Big Muff Ram's Head Violet</h3>
+            <p>ビックマフ、バイオレット期ラムズヘッドの回路を再現したモデル。</p>
+            <span class="tag">Fuzz</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="drive" onclick="openLightbox(11)">
+          <div class="works-img"><img src="images/works/12pilot.jpg" alt="Pilot"></div>
+          <div class="works-info">
+            <p class="section-label">Drive</p>
+            <h3>Pilot</h3>
+            <p>東京ペダルサミットSonic Futuresエフェクターコンテストで決勝の３台に残った作品。Don-Shari SWと、ドンシャリの谷の周波数帯を変更するDon-Shari　Freqツマミ搭載<br>フットスイッチがリングモジュレータ―SWとツマミ、光センサーにより明暗で音程が変化する。３BAND EQ</p>
+            <span class="tag">Drive</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="other" onclick="openLightbox(12)">
+          <div class="works-img"><img src="images/works/13theremin.jpg" alt="木製テルミン"></div>
+          <div class="works-info">
+            <p class="section-label">Other / 電子楽器</p>
+            <h3>木製テルミン</h3>
+            <p>テルミン正式にロッドアンテナは360°全方向に回転可能。9Vアダプターまたは電池で駆動。SW付きVol、チューニング用フレケンシーツマミ２つ</p>
+            <span class="tag">Other</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="other" onclick="openLightbox(13)">
+          <div class="works-img"><img src="images/works/14slowgear.jpg" alt="Slow Gear"></div>
+          <div class="works-info">
+            <p class="section-label">Other / Swell</p>
+            <h3>Slow Gear</h3>
+            <p>販売期間3年弱と短命の本家スローギアを再現。アタック感のないフワッとした「ボリューム奏法」のサウンド。スウェル系</p>
+            <span class="tag">Other</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="other" onclick="openLightbox(14)">
+          <div class="works-img"><img src="images/works/15eqpreamp.jpg" alt="EQ PreAmp"></div>
+          <div class="works-info">
+            <p class="section-label">Other / Preamp</p>
+            <h3>EQ PreAmp</h3>
+            <p>フェンダーアンプ系の3BANDイコライザーを搭載したプリアンプ</p>
+            <span class="tag">Other</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="drive" onclick="openLightbox(15)">
+          <div class="works-img"><img src="images/works/16Vanity.jpg" alt="Vanity"></div>
+          <div class="works-info">
+            <p class="section-label">Drive / Distortion</p>
+            <h3>Vanity</h3>
+            <p>ディストーション、トーン回路はビッグマフ的なLPFとHPFの併用回路。意味は虚栄心</p>
+            <span class="tag">Drive</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(16)">
+          <div class="works-img"><img src="images/works/17gaiafuzz.jpg" alt="GAIA FUZZ"></div>
+          <div class="works-info">
+            <p class="section-label">Fuzz</p>
+            <h3>GAIA FUZZ</h3>
+            <p>奥大井OVERDRIVE2025応募作。審査員のSPIさいとう氏から本コンテストで一番破壊的なサウンドと評された。</p>
+            <span class="tag">Fuzz</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(17)">
+          <div class="works-img"><img src="images/works/18GASFACE.jpeg" alt="GAS FACE"></div>
+          <div class="works-info">
+            <p class="section-label">Fuzz / Custom</p>
+            <h3>GAS FACE</h3>
+            <p>キャンプ用ガスカートリッジ缶で作ったファズ。ファズフェイス系にLPFのトーン回路がついている。</p>
+            <span class="tag">Fuzz</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="other" onclick="openLightbox(18)">
+          <div class="works-img"><img src="images/works/19cleanbooster.jpg" alt="Clean Booster"></div>
+          <div class="works-info">
+            <p class="section-label">Booster</p>
+            <h3>Clean Booster</h3>
+            <p>EPブースターがベース、FATスイッチの変化を大きくしている。FETは2N5457で製作</p>
+            <span class="tag">Other</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="other" onclick="openLightbox(19)">
+          <div class="works-img"><img src="images/works/20comp.jpg" alt="Compressor"></div>
+          <div class="works-info">
+            <p class="section-label">Compressor</p>
+            <h3>Compressor</h3>
+            <p>サスティーンを稼いだり、アタックをつぶしたり。コンプレッサーです。強くつぶすと音が消えます。</p>
+            <span class="tag">Other</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="other" onclick="openLightbox(20)">
+          <div class="works-img"><img src="images/works/21quietboost.jpg" alt="Quiet Boost"></div>
+          <div class="works-info">
+            <p class="section-label">Booster</p>
+            <h3>Quiet Boost</h3>
+            <p>Clean BoosterのSWを排除、トーンツマミを搭載しています。</p>
+            <span class="tag">Other</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="drive" onclick="openLightbox(21)">
+          <div class="works-img"><img src="images/works/22distortion.jpg" alt="Distortion"></div>
+          <div class="works-info">
+            <p class="section-label">Drive / Distortion</p>
+            <h3>Distortion</h3>
+            <p>100均の缶で作ったディストーション。RAT系ですが、ツマミ方向は一般的な回転方向。オペアンプはTl072が入っています。</p>
+            <span class="tag">Drive</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="drive" onclick="openLightbox(22)">
+          <div class="works-img"><img src="images/works/23overdrive.jpg" alt="Over Drive"></div>
+          <div class="works-info">
+            <p class="section-label">Drive</p>
+            <h3>Over Drive</h3>
+            <p>クリッピングが2パターン、そしてクリッピングなしが選べるオーバードライブ</p>
+            <span class="tag">Drive</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="modulation" onclick="openLightbox(23)">
+          <div class="works-img"><img src="images/works/24tremolo.jpg" alt="Tremolo"></div>
+          <div class="works-info">
+            <p class="section-label">Modulation</p>
+            <h3>Tremolo</h3>
+            <p>オペアンプのトレモロ。</p>
+            <span class="tag">Modulation</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="reverb" onclick="openLightbox(24)">
+          <div class="works-img"><img src="images/works/25tunnel_reverb.jpg" alt="Tunnel Reverb"></div>
+          <div class="works-info">
+            <p class="section-label">Reverb</p>
+            <h3>Tunnel Reverb</h3>
+            <p>かかりの薄めのリヴァーブ、PT2399を２つ使用</p>
+            <span class="tag">Delay Reverb</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="modulation" onclick="openLightbox(25)">
+          <div class="works-img"><img src="images/works/26phaser.jpg" alt="Phaser"></div>
+          <div class="works-info">
+            <p class="section-label">Modulation</p>
+            <h3>Phaser</h3>
+            <p>2段フェイザー。LFO周期に合わせてLEDが点滅。</p>
+            <span class="tag">Modulation</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="other" onclick="openLightbox(26)">
+          <div class="works-img"><img src="images/works/27power_supply.jpg" alt="Power Supply"></div>
+          <div class="works-info">
+            <p class="section-label">Other</p>
+            <h3>Power Supply</h3>
+            <p>９Vセンターマイナスの電源を8台に供給。整流回路、9vレギュレータ使用、平滑コンデンサ内蔵</p>
+            <span class="tag">Other</span>
+          </div>
+        </div>
+
+        <div class="works-item fade-in" data-category="fuzz" onclick="openLightbox(27)">
+          <div class="works-img"><img src="images/works/28fuzz.jpg" alt="Fuzz"></div>
+          <div class="works-info">
+            <p class="section-label">Fuzz</p>
+            <h3>Fuzz</h3>
+            <p>ファズフェイス系のFUZZ、ラグ版で製作。</p>
+            <span class="tag">Fuzz</span>
+          </div>
+        </div>
+
+
 
       </div>
     </div>
@@ -330,6 +504,26 @@
       { src: 'images/works/07Octave-fuzz.jpg',               caption: 'Super Strong Tone Machine' },
       { src: 'images/works/08ObenToneBender.jpeg',           caption: 'Oben Tone Bender' },
       { src: 'images/works/09Cocacolas.jpg',                 caption: 'Coca-Cola Chorus' },
+      { src: 'images/works/10kasiwa-centur.jpg',             caption: 'Tetsu Kashiwa 75th Anniversary Drive' },
+      { src: 'images/works/11bigmuff_violet.jpg',            caption: "Big Muff Ram's Head Violet" },
+      { src: 'images/works/12pilot.jpg',                     caption: 'Pilot' },
+      { src: 'images/works/13theremin.jpg',                  caption: '木製テルミン' },
+      { src: 'images/works/14slowgear.jpg',                  caption: 'Slow Gear' },
+      { src: 'images/works/15eqpreamp.jpg',                  caption: 'EQ PreAmp' },
+      { src: 'images/works/16Vanity.jpg',                    caption: 'Vanity' },
+      { src: 'images/works/17gaiafuzz.jpg',                  caption: 'GAIA FUZZ' },
+      { src: 'images/works/18GASFACE.jpeg',                  caption: 'GAS FACE' },
+      { src: 'images/works/19cleanbooster.jpg',              caption: 'Clean Booster' },
+      { src: 'images/works/20comp.jpg',                      caption: 'Compressor' },
+      { src: 'images/works/21quietboost.jpg',                caption: 'Quiet Boost' },
+      { src: 'images/works/22distortion.jpg',                caption: 'Distortion' },
+      { src: 'images/works/23overdrive.jpg',                 caption: 'Over Drive' },
+      { src: 'images/works/24tremolo.jpg',                   caption: 'Tremolo' },
+      { src: 'images/works/25tunnel_reverb.jpg',             caption: 'Tunnel Reverb' },
+      { src: 'images/works/26phaser.jpg',                    caption: 'Phaser' },
+      { src: 'images/works/27power_supply.jpg',              caption: 'Power Supply' },
+      { src: 'images/works/28fuzz.jpg',                      caption: 'Fuzz' },
+      { src: 'images/works/05deathmetalslime.jpg',           caption: 'Death Metal Slime' },
     ];
 
     let currentIdx = 0;
@@ -388,7 +582,6 @@
     function toggleMenu() {
       document.querySelector('.nav-links').classList.toggle('open');
     }
-    // メニュー外クリックで閉じる
     document.addEventListener('click', function(e) {
       if (!e.target.closest('nav')) {
         document.querySelector('.nav-links').classList.remove('open');
