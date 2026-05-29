@@ -751,3 +751,10 @@ select option {
     flex-direction: column;
   }
 }
+
+/* ── h1の記述ナビ横 ── */
+.site-description {
+  font-size: 0.3rem;
+  opacity: 0.7;
+  margin-top: 15px;
+}
