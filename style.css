@@ -746,7 +746,7 @@ select option {
 
 /* ── h1の記述ナビ横 ── */
 .site-description {
-  font-size: 0.7rem;
+  font-size: 0.5rem;
   opacity: 0.7;
   margin-top: 15px;
 }
