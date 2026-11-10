@@ -1,7 +1,7 @@
-// 更新したときは、下の VERSION の数字を変えてください（例: kobo-v5）。
+// 更新したときは、下の VERSION の数字を変えてください（例: kobo-v8）。
 // 数字を変えたときだけ、端末に保存されたファイルが新しい版に入れ替わります。
 // それ以外のときは、端末に保存したファイルだけで動き、アプリのファイルを取りに行きません。
-const VERSION = 'kobo-v5';
+const VERSION = 'kobo-v8';
 const FILES = ['./', 'index.html', 'manual.html', 'manifest.webmanifest',
   'vendor/jspdf.umd.min.js', 'vendor/html2canvas.min.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'];
