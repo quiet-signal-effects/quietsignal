@@ -1,276 +1,162 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>コード譜クイック工房</title>
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#2563eb">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="クイック工房">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
-<script src="vendor/jspdf.umd.min.js"></script>
-<script src="vendor/html2canvas.min.js"></script>
-<style>
-:root{--bg:#eef0f3;--ui:#fff;--tx:#222;--ac:#2563eb;--bd:#cbd2da;--sel:#cfe3ff;color-scheme:light dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181c;--ui:#22272e;--tx:#e6e9ed;--bd:#3a424c;--sel:#2b4b7a}}
-*{box-sizing:border-box}html,body{margin:0}
-body{background:var(--bg);color:var(--tx);font:14px "Hiragino Sans","Yu Gothic",sans-serif;padding-bottom:330px}
-button,select,input,textarea{font:inherit;color:var(--tx);background:var(--ui);border:1px solid var(--bd);border-radius:6px;padding:6px 9px}
-button{cursor:pointer;touch-action:manipulation}button:active{background:var(--sel)}button:disabled{opacity:.35}
-.tb{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto;align-items:center;padding:6px 8px;background:var(--ui);border-bottom:1px solid var(--bd)}
-.tb .sp{flex:1;min-width:0}.tb button,.tb input,.tb .lab{flex:none}.tb button{padding:6px 9px}.tb a.btn{flex:none;padding:6px 11px;border:1px solid var(--bd);border-radius:6px;background:var(--ui);color:var(--tx);text-decoration:none;font-weight:700}
-.sheet{container-type:inline-size;width:100%;max-width:794px;margin:12px auto;background:#fff;color:#111;box-shadow:0 2px 10px #0003;aspect-ratio:194/280;overflow:hidden}
-.in{padding:2cqw 5cqw}
-.sheet input.t,.sheet input.ar,.sheet input.sub{width:100%;border:0;background:transparent;color:#111;text-align:center;padding:0;border-radius:0}
-.sheet input.t{font-size:5cqw;font-weight:700}.sheet input.ar{font-size:3cqw;color:#333}.sheet .hd{display:flex;gap:3cqw;align-items:baseline;margin-bottom:1cqw}.sheet .hd input{min-width:0}.sheet .hd input.t{flex:3;text-align:center;margin:0}.sheet .hd input.ar{flex:2;text-align:center;margin:0}.sheet input.sub.sub{text-align:left;width:60%;margin:0 0 1.5cqw}.sheet input.sub{font-size:2.2cqw;margin-bottom:1cqw;color:#444;margin-top:.5cqw}
-.rw{position:relative;height:calc(var(--gp) + var(--rh) + var(--bt,0cqw));padding-top:var(--gp);break-inside:avoid}.row{display:flex;border-left:.25cqw solid #111;border-right:.25cqw solid #111;height:var(--rh)}
-.rl{position:absolute;left:0;top:calc(var(--gp) - var(--lf)*3);height:calc(var(--lf)*1.45);line-height:1;padding:0 calc(var(--lf)*.55);min-width:calc(var(--lf)*1.45);text-align:center;border:.25cqw solid #111;font:700 var(--lf)/1.2 Arial,"Hiragino Sans",sans-serif;background:#fff;color:#111;white-space:nowrap;cursor:pointer}
-.rl.t{top:calc(var(--gp) - var(--lf)*1.45 - .15cqw)}
-.vo{position:absolute;left:0;right:15%;top:calc(var(--lf)*-1.3);height:calc(var(--lf)*1.2);padding-left:.8cqw;border-left:.2cqw solid #111;border-top:.2cqw solid #111;font:700 calc(var(--lf)*.9)/1.2 Arial,sans-serif;color:#111}
-.nt{position:absolute;right:.6cqw;top:calc(var(--lf)*-1.3);font:italic 700 calc(var(--lf)*.95)/1.2 Arial,serif;color:#111}
-.rp{position:absolute;top:0;bottom:0;width:2.2cqw;pointer-events:none;background:linear-gradient(#111,#111) 0 0/.55cqw 100% no-repeat,linear-gradient(#111,#111) .95cqw 0/.2cqw 100% no-repeat,radial-gradient(circle,#111 .2cqw,transparent .24cqw) 1.35cqw 36%/.7cqw .7cqw no-repeat,radial-gradient(circle,#111 .2cqw,transparent .24cqw) 1.35cqw 64%/.7cqw .7cqw no-repeat}
-.rp.l{left:0}.rp.r{right:0;transform:scaleX(-1)}
-.rr{position:absolute;right:0;bottom:0;font:700 calc(var(--lf)*1.15)/1.2 Arial,sans-serif;color:#111;white-space:nowrap;cursor:pointer}
-.nb{position:absolute;right:.6cqw;top:calc(100% + .1cqw);font:italic 700 calc(var(--lf)*1.05)/1.2 Arial,serif;color:#111;white-space:nowrap}.nb.sh{right:5cqw}
-.bar.hs .segs{padding-left:2cqw}.bar.he .segs{padding-right:2cqw}.bar.bd .segs{padding-right:.6cqw}
-.dl{display:none}.bar.bd{border-right:.25cqw solid #111;margin-right:.45cqw}
-.xx{position:absolute;left:0;right:0;top:calc(50% - .45cqw);height:.7cqw;border-top:.2cqw solid #111;border-bottom:.2cqw solid #111;pointer-events:none;z-index:2}
-.bar{position:relative;flex:1 1 0;min-width:0;display:flex;border-left:.25cqw solid #111}.bar:first-child{border-left:0}
-.segs{flex:1;display:flex;min-width:0}.segs.s4{display:grid;grid-template-columns:1fr 1fr}
-.seg{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-weight:700;white-space:nowrap;position:relative}
-.s2 .seg+.seg::before{content:"";position:absolute;left:0;top:25%;bottom:25%;border-left:.12cqw solid #888;transform:rotate(18deg)}
-.seg .c{font-size:var(--f)}.s2 .c{font-size:calc(var(--f)*.85)}.s4 .c{font-size:calc(var(--f)*.68)}
-.c .q{font-size:.62em;margin-left:.05em;font-weight:600}
-.seg.on{background:var(--sel)}.seg:hover{background:#0001}
-.txt{height:var(--slot);overflow:hidden;white-space:pre-wrap;cursor:pointer;padding:.8cqw 1cqw;min-height:3cqw;line-height:1.35;break-inside:avoid}
-.txt.on{outline:2px solid var(--ac)}.txt.empty{color:#aaa}
-.dock{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--ui);border-top:1px solid var(--bd);padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));max-height:48vh;overflow:auto}
-.dock .r{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;align-items:center}
-.dock .r button{min-width:38px}
-.dock input#ci{flex:1;font-size:20px;font-weight:700;min-width:0}
-.dock textarea{width:100%;min-height:70px;font-size:16px}
-.dock .lab{opacity:.65;font-size:12px}
-.sw{width:28px;height:28px;border-radius:50%;padding:0;min-width:28px!important}.sw.on{outline:3px solid var(--ac)}
-.kp button{font-weight:700;padding:8px 0;min-width:40px}
-.hint{font-size:11px;opacity:.6;margin-top:4px}details summary{cursor:pointer;margin-top:8px}
-.exp .seg{background:none!important}.exp .txt{outline:0!important}.exp .txt.empty{visibility:hidden}
-.md{position:fixed;inset:0;z-index:20;background:#0007;display:none;align-items:center;justify-content:center}.md.on{display:flex}
-.mb{background:var(--ui);border-radius:12px;padding:14px;width:min(92vw,420px);max-height:86vh;overflow:auto}.mb .r{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;align-items:center}.mb hr{border:0;border-top:1px solid var(--bd);margin:12px 0}
-@page{size:A4;margin:8mm}
-@media print{body{background:#fff;padding:0!important}.ui{display:none!important}.sheet{margin:0;box-shadow:none;max-width:none;width:194mm;height:280mm;aspect-ratio:auto;overflow:hidden;break-inside:avoid}.in{padding:2cqw 5cqw}.seg.on,.txt.on{background:none;outline:0}.txt.empty{visibility:hidden}.sheet input.t,.sheet input.ar,.sheet input.sub{-webkit-text-fill-color:#111}}
-</style></head><body>
-<div class="tb ui">
- <button id="undo" title="戻す">↶</button><button id="redo" title="やり直し">↷</button>
- <span class="lab">小節数</span><button data-mx="4">4</button><button data-mx="6">6</button><button data-mx="8">8</button><input id="mx" type="number" min="1" max="9" style="width:58px" title="1〜9"><span class="lab">段</span><input id="nr" type="number" min="10" max="25" style="width:56px" title="段数(10〜25)">
- <span class="sp"></span><button id="new">新規</button><a class="btn" href="manual.html" title="使い方">？</a><button id="menu" title="移調・ファイル">⚙</button><button id="pdf" title="PDFで保存">PDF</button><button id="print" title="印刷(A4)">🖨</button>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiet Signal — Handcrafted Effects</title>
+<meta name="description" content="三重県松阪市を拠点にエフェクターの製造・販売を行う“Quiet Signal”のウェブサイトです。回路設計から筐体デザインまで一貫して行います。">
+  <meta property="og:title" content="Quiet Signal | Effects Pedals">
+  <meta property="og:description" content="三重のエフェクターブランド。回路設計から筐体デザインまで製作。">
+  <meta property="og:image" content="https://quietsignal.jp/images/hero2.jpg">
+  <meta property="og:url" content="https://quietsignal.jp/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Quiet Signal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Quiet Signal | Effects Pedals">
+  <meta name="twitter:description" content="三重のハンドビルドエフェクターブランド。回路設計から筐体デザインまで一貫して製作。">
+  <meta name="twitter:image" content="https://quietsignal.jp/images/hero.jpg">
+  <link rel="canonical" href="https://quietsignal.jp/">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="48x48" href="images/favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon-180.png">
+<link rel="manifest" href="manifest.json">
+
+  <link rel="stylesheet" href="style.css">
+  <style>
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    /* ヒーロー画像を小さめに */
+    .hero-img {
+      min-height: 80vh;
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NPM7YN1HEP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NPM7YN1HEP');
+  </script>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="images/logo.png" width="120" alt="Quiet Signal" class="nav-logo-img"></a>
+
+<ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="works.html">Works</a></li>
+      <li><a href="sound.html">Sound</a></li>
+      <li><a href="store.html">Store</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-hamburger" onclick="toggleMenu()" aria-label="メニュー">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <main>
+
+
+    <!-- HERO -->
+    <section class="hero hero-img">
+      <div class="hero-img-wrap">
+        <img src="images/hero.jpg" alt="Quiet Signal — Handcrafted Effects" class="hero-photo">
+        <div class="hero-img-overlay"></div>
+        <div style="position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:center; padding-top:1.5rem; text-align:center; pointer-events:none;">
+          <p style="font-family:'Zen Maru Gothic',serif; font-size:1.1rem; line-height:1.5; color:#f0f8ff; text-shadow: 0 1px 6px rgba(0,0,0,0.4);">
+          Make your Own Noise!
+          </p>
+        </div>
+      </div>
+      <div class="hero-img-content">
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;">
+          <div style="display:flex; gap:0.75rem; align-items:center; flex-shrink:0;">
+            <a href="store.html" class="btn" style="margin:0;">Visit Store</a>
+            <a href="works.html" class="btn btn-outline" style="margin:0;">View Works</a>
+          </div>
+          <div style="display:flex; gap:0.5rem; align-items:center; flex-shrink:0; margin-left:0.5rem;">
+            <a href="https://www.instagram.com/quietsignal_effects" target="_blank" rel="noopener" style="display:flex; align-items:center;">
+              <img src="images/Instagram.png" alt="Instagram" width="28" style="background:transparent; mix-blend-mode:multiply;">
+            </a>
+            <a href="https://www.youtube.com/@italian_effects" target="_blank" rel="noopener" style="display:flex; align-items:center;">
+              <img src="images/youtube.png" alt="YouTube" width="40" style="background:transparent; mix-blend-mode:multiply;">
+            </a>
+          </div>
+        </div>
+        <p class="hero-eyebrow" style="margin-top:1.2rem; margin-bottom:0; opacity:1; font-weight:700;">Handcrafted Effects — Mie, Japan</p>
+      </div>
+    </section>
+    <!-- TICKER -->
+    <div aria-hidden="true" data-nosnippet style="border-top:2px solid #24140e; border-bottom:2px solid #24140e; overflow:hidden; white-space:nowrap; background:rgba(255,255,255,0.12);">
+      <div style="display:inline-block; animation: ticker 22s linear infinite; padding: 0.7rem 0; font-family:'Space Mono',monospace; font-size:0.68rem; letter-spacing:0.2em;">
+        &nbsp;現在STOREは準備中です、もうしばらくお待ちください。&nbsp;&nbsp;&nbsp;— &nbsp;&nbsp;&nbsp;The store is currently in preparation. Please check back soon.&nbsp;&nbsp;&nbsp;— &nbsp;&nbsp;&nbsp;WORKSを更新しました。(9/8)。&nbsp;&nbsp;&nbsp;— &nbsp;&nbsp;&nbsp;9/8 --Updated the "WORKS" page.&nbsp;&nbsp;&nbsp;— &nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+    <!-- ABOUT TEASER -->
+    <section class="container">
+      <div class="about-intro fade-in">
+        <div style="border:2px solid #24140e; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#b0e0e6;">
+          <video autoplay muted loop playsinline style="width:60%; height:60%; object-fit:cover; display:block;">
+            <source src="videos/intro.mp4" type="video/mp4">
+          </video>
+        </div>
+
+        <div class="about-text">
+          <p class="section-label">// About</p>
+          <h2>Quiet Signalとは</h2>
+          <p>
+    三重県松阪市を拠点とするエフェクターブランド“Quiet Signal”は、プレイヤーが感覚的に扱いやすい操作性を目指し、個人ビルダーが回路設計、基板製作、筐体デザインを一貫して行っている。<br>奥大井OVERDRIVE2025エフェクターコンテストではベース用プリアンプドライバー【River】で【グランプリ】を受賞、<br>TC楽器presents 第３回改造エフェクターコンテストではモジュレーションディレイ【GAS ECHORUS】で【ギターマガジン賞】を受賞した。
+          </p> 
+
+<a href="about.html" class="btn">続き read more</a>
+
+<div style="display:flex; gap:1rem; align-items:center; margin-top:1.5rem;">
+  <a href="https://www.instagram.com/quietsignal_effects" target="_blank" rel="noopener" style="display:flex; align-items:center;">
+    <img src="images/Instagram.png" alt="Instagram" width="28" style="background:transparent; mix-blend-mode:multiply;">
+  </a>
+  <a href="https://www.youtube.com/@italian_effects" target="_blank" rel="noopener" style="display:flex; align-items:center;">
+    <img src="images/youtube.png" alt="YouTube" width="40" style="background:transparent; mix-blend-mode:multiply;">
+  </a>
 </div>
-<div class="sheet"><div class="in"><input class="sub" id="sub" placeholder="Key / テンポ など"><div class="hd"><input class="t" id="title" placeholder="タイトル"><input class="ar" id="artist" placeholder="アーティスト名"></div><div id="rows"></div></div></div>
-<div class="md ui" id="md"><div class="mb">
- <b>移調</b>
- <div class="r"><button id="tm">−</button><input id="tn" type="number" min="-11" max="11" value="0" style="width:64px"><button id="tp">＋</button><span class="lab">半音</span><select id="tf"><option value="s">♯で表記</option><option value="f">♭で表記</option></select></div>
- <div class="r"><button id="tdo" style="background:var(--ac);color:#fff">移調する</button><span class="lab">全コードを変更（「戻す」で取り消せます）</span></div>
- <hr><b>ファイル</b>
- <div class="r"><button id="fsave">ファイルに保存</button><button id="fload">ファイルを読み込む</button><input type="file" id="ff" accept=".json,application/json" hidden></div>
- <div class="r" style="justify-content:flex-end"><button id="mclose">閉じる</button></div>
-</div></div>
-<div class="dock ui" id="dock"></div>
-<script>
-const $=s=>document.querySelector(s);
-const FONTS={g:['ゴシック','"Hiragino Sans","Yu Gothic",Meiryo,sans-serif'],m:['明朝','"Hiragino Mincho ProN","Yu Mincho",serif'],r:['丸ゴ','"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif'],k:['手書き風','"Klee One","Yu Kyokasho","Comic Sans MS",cursive'],c:['等幅','"Courier New",monospace']};
-const SIZES={S:['小',2.2],M:['中',3.2],L:['大',4.6],X:['特大',7]};
-const COLORS=['#111111','#d62828','#1d4ed8','#15803d','#c2410c','#7e22ce','#888888'];
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const mkRow=n=>({t:'c',bars:Array.from({length:n},()=>[''])});
-const mkTxt=()=>({t:'x',text:'',size:'M',color:'#111111',font:'g',align:'left',bold:false});
-let S,sel={r:0,b:0,s:0},hist=[],hi=0;
-try{S=JSON.parse(localStorage.getItem('chord1'))}catch(e){}
-if(!S||!S.rows)S={title:'',artist:'',sub:'',max:4,rows:Array.from({length:10},()=>mkRow(4))};
-while(S.rows.length<10)S.rows.push(mkRow(S.max||4));hist=[JSON.stringify(S)];
-function persist(){try{localStorage.setItem('chord1',JSON.stringify(S))}catch(e){}}
-function commit(){const j=JSON.stringify(S);if(j===hist[hi])return;hist=hist.slice(0,hi+1);hist.push(j);if(hist.length>150)hist.shift();hi=hist.length-1;persist();btns()}
-function load(j){S=JSON.parse(j);clamp();persist();all()}
-function undo(){commit();if(hi>0){hi--;load(hist[hi])}}
-function redo(){if(hi<hist.length-1){hi++;load(hist[hi])}}
-function btns(){$('#undo').disabled=hi<=0;$('#redo').disabled=hi>=hist.length-1}
-function clamp(){sel.r=Math.max(0,Math.min(sel.r,S.rows.length-1));const R=S.rows[sel.r];if(R.t==='c'){sel.b=Math.max(0,Math.min(sel.b||0,R.bars.length-1));sel.s=Math.max(0,Math.min(sel.s||0,R.bars[sel.b].length-1))}}
-function fmt(c){if(!c)return'';const m=c.match(/^([A-Ga-g])([b#♭♯]?)(.*)$/);if(!m)return esc(c);
- const a=m[2].replace('b','♭').replace('#','♯');const q=m[3].replace(/\/([A-Ga-g])([b#♭♯]?)/g,(x,l,k)=>'/'+l.toUpperCase()+k.replace('b','♭').replace('#','♯')).replace(/#/g,'♯').replace(/b(?=\d)/g,'♭');
- return esc(m[1].toUpperCase()+a)+(q?'<span class="q">'+esc(q)+'</span>':'')}
-const SHP=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'],FLT=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'],BASE={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
-function trNote(l,a,n,fl){let v=BASE[l];if(/[#♯]/.test(a))v++;else if(/[b♭]/.test(a))v--;v=((v+n)%12+12)%12;return (fl?FLT:SHP)[v]}
-function trChord(c,n,fl){if(!c)return c;const m=c.match(/^([A-G])([b#♭♯]?)(.*)$/);if(!m)return c;
- return trNote(m[1],m[2],n,fl)+m[3].replace(/\/([A-G])([b#♭♯]?)/g,(x,l,a)=>'/'+trNote(l,a,n,fl))}
-function closeMd(){$('#md').classList.remove('on')}
-function doTranspose(){const n=Math.max(-11,Math.min(11,Math.round(+$('#tn').value)||0));if(!n){closeMd();return}const fl=$('#tf').value==='f';
- S.rows.forEach(R=>{if(R.t==='c')R.bars=R.bars.map(B=>B.map(c=>trChord(c,n,fl)))});
- S.sub=(S.sub||'').replace(/(Key\s*[:=：]?\s*)([A-Ga-g])([b#♭♯]?)/i,(x,p,l,a)=>p+trNote(l.toUpperCase(),a,n,fl));
- $('#tn').value=0;commit();all();closeMd()}
-const DL={async save({filename,data}){const type=/\.pdf$/i.test(filename)?'application/pdf':'application/json';const blob=data instanceof Blob?data:new Blob([data],{type});
- if(matchMedia('(pointer:coarse)').matches&&navigator.canShare){try{const f=new File([blob],filename,{type});if(navigator.canShare({files:[f]})){await navigator.share({files:[f]});return}}catch(e){if(e&&e.name==='AbortError')return}}
- const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}};
-async function saveFile(){const dl=DL;
- if(!dl){alert('この画面ではファイル保存を使えません。');return}
- commit();const name=((S.title||'chord-chart')+(S.artist?' - '+S.artist:'')).replace(/[\\/:*?"<>|]/g,'_');
- try{await dl.save({filename:name+'.json',data:JSON.stringify({app:'chord-chart',version:1,data:S})})}catch(e){if(!e||e.code!=='declined')alert('保存できませんでした。')}}
-function loadFile(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result),d=o&&o.data?o.data:o;
-  if(!d||!Array.isArray(d.rows)||!d.rows.every(R=>R&&(R.t==='x'||(R.t==='c'&&Array.isArray(R.bars)&&R.bars.length&&R.bars.every(B=>Array.isArray(B)&&B.length)))))throw 0;
-  if(!confirm('現在の譜面を読み込んだ内容で置き換えます。よろしいですか？（「戻す」で元に戻せます）'))return;
-  S=d;S.title=S.title||'';S.artist=S.artist||'';S.sub=S.sub||'';S.max=Math.max(1,Math.min(9,(S.max|0)||4));
-  while(S.rows.length<10)S.rows.push(mkRow(S.max));S.rows.length=Math.min(S.rows.length,25);
-  sel={r:0,b:0,s:0};clamp();commit();all();closeMd()}catch(x){alert('このファイルは読み込めませんでした。')}};r.readAsText(f)}
-function cloneStyled(src){
- const isIn=src.tagName==='INPUT',dst=document.createElement(isIn?'div':src.tagName.toLowerCase());
- const sty=(cs,t)=>{let c='';for(const p of cs)c+=p+':'+cs.getPropertyValue(p)+';';t.setAttribute('style',c)};
- sty(getComputedStyle(src),dst);
- const pb=getComputedStyle(src,'::before');
- if(!isIn&&pb.content&&pb.content!=='none'&&pb.content!=='normal'){const s=document.createElement('span');sty(pb,s);s.textContent=pb.content.replace(/^"|"$/g,'');dst.appendChild(s)}
- if(isIn){dst.textContent=src.value;dst.style.display='block'}
- else src.childNodes.forEach(c=>{if(c.nodeType===3)dst.appendChild(c.cloneNode());else if(c.nodeType===1)dst.appendChild(cloneStyled(c))});
- return dst}
-async function exportPDF(){
- const btn=$('#pdf');const dl=DL;
- if(!dl){alert('この画面ではPDF保存を使えません。🖨の印刷から「PDFに保存」を選んでください。');return}
- if(!window.jspdf||!window.html2canvas){alert('PDFライブラリを読み込めませんでした。通信状況を確認してください。');return}
- commit();btn.disabled=true;btn.textContent='作成中…';
- const sh=document.querySelector('.sheet'),box=document.createElement('div');let host=null;
- box.style.cssText='position:fixed;left:-99999px;top:0;width:794px';
- try{
-  const off=sh.cloneNode(true);off.classList.add('exp');off.style.margin='0';off.style.boxShadow='none';
-  const a=sh.querySelectorAll('input'),b=off.querySelectorAll('input');a.forEach((x,i)=>{b[i].value=x.value});
-  box.appendChild(off);document.body.appendChild(box);
-  const root=cloneStyled(off);root.style.margin='0';root.style.boxShadow='none';root.style.maxWidth='none';
-  box.remove();
-  host=document.createElement('div');host.style.cssText='position:fixed;left:-99999px;top:0';host.appendChild(root);document.body.appendChild(host);
-  const cv=await html2canvas(root,{scale:2,backgroundColor:'#fff',logging:false});
-  const pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',compress:true});
-  pdf.addImage(cv.toDataURL('image/png'),'PNG',8,8,194,280);
-  const name=((S.title||'chord-chart')+(S.artist?' - '+S.artist:'')).replace(/[\\/:*?"<>|]/g,'_');
-  await dl.save({filename:name+'.pdf',data:pdf.output('blob')});
- }catch(e){if(!e||e.code!=='declined')alert('PDFを作成できませんでした。🖨の印刷から「PDFに保存」もお試しください。'+(e&&e.message?'\n'+e.message:''))}
- finally{box.remove();if(host)host.remove();btn.disabled=false;btn.textContent='PDF'}}
-function layout(){const sh=document.querySelector('.sheet'),W=sh.clientWidth;if(!W)return;
- const top=$('#rows').getBoundingClientRect().top-sh.getBoundingClientRect().top;
- const avail=(sh.clientHeight-top)/W*100-2;
- const n=Math.max(10,S.rows.length),g0=1.2;
- const need=(R,lf)=>{if(R.t!=='c')return g0;const anyV=R.m&&R.m.some(upM),stack=!!(R.m&&upM(R.m[0]));
-  return Math.max(g0,R.label?(stack?lf*3+.6:Math.max(lf*1.45+1.1,anyV?lf*1.3+.6:0)):(anyV?lf*1.3+.6:0))};
- const sum=lf=>S.rows.reduce((a,R)=>a+need(R,lf)+(btm(R)?lf*1.3+.4:0),0)+(n-S.rows.length)*g0;
- let lf=1.7,rh=(avail-sum(lf))/n;
- while(rh<4&&lf>.9){lf=Math.round((lf-.1)*10)/10;rh=(avail-sum(lf))/n}
- rh=Math.max(1,Math.min(rh,9.5));const extra=Math.max(0,avail-(n*rh+sum(lf))),slot=rh+g0+extra/n,gp=g0;window.GP=S.rows.map(R=>need(R,lf)+extra/n);window.BT=S.rows.map(R=>btm(R)?lf*1.3+.4:0);
- const base=S.max>=7?2.9:S.max>=5?3.5:4.2,f=Math.min(base,rh*.62);
- const st=$('#rows').style;[['slot',slot],['rh',rh],['gp',gp],['lf',lf],['f',f]].forEach(([k,v])=>st.setProperty('--'+k,v.toFixed(3)+'cqw'))}
-function blank(R){return R.t==='x'?!R.text:!R.label&&!R.rep&&R.bars.every(B=>B.every(c=>!c))&&!(R.m&&R.m.some(m=>m&&Object.values(m).some(v=>v)))}
-function setRows(n){n=Math.max(10,Math.min(25,Math.round(n)||S.rows.length));
- if(n<S.rows.length&&!S.rows.slice(n).every(blank)&&!confirm('末尾の'+(S.rows.length-n)+'段(入力済みを含む)を削除しますか？'))return all();
- while(S.rows.length<n)S.rows.push(mkRow(S.max));S.rows.length=n;clamp();commit();all()}
-function renderSheet(){layout();
- $('#title').value=S.title;$('#artist').value=S.artist||'';$('#sub').value=S.sub;$('#mx').value=S.max;$('#nr').value=S.rows.length;document.querySelectorAll('[data-mx]').forEach(b=>b.style.outline=+b.dataset.mx===S.max?'2px solid var(--ac)':'');
- const f=S.max>=7?2.3:S.max>=5?2.8:3.4;
- $('#rows').innerHTML=S.rows.map((R,r)=>{
-  if(R.t==='x'){const on=sel.r===r&&!('b'in sel&&S.rows[sel.r].t==='c');
-   return `<div class="txt${on?' on':''}${R.text?'':' empty'}" data-r="${r}" style="font-size:${SIZES[R.size][1]}cqw;color:${R.color};font-family:${FONTS[R.font][1]};text-align:${R.align};font-weight:${R.bold?700:400}">${esc(R.text||'テキスト').replace(/\n/g,'<br>')}</div>`}
-  return `<div class="rw" style="--gp:${((window.GP&&GP[r])||1).toFixed(3)}cqw;--bt:${((window.BT&&BT[r])||0).toFixed(3)}cqw">${R.label?`<div class="rl${(R.m&&upM(R.m[0]))?'':' t'}" data-r="${r}">${esc(R.label)}</div>`:''}<div class="row">`+R.bars.map((B,b)=>{const m=(R.m&&R.m[b])||{};return `<div class="bar${m.s?' hs':''}${m.e?' he':''}${m.d?' bd':''}">${m.d?'<i class="dl"></i>':''}${m.z?'<i class="xx"></i>':''}${m.s?'<i class="rp l"></i>':''}${m.e?'<i class="rp r"></i>':''}${m.v?`<div class="vo">${esc(m.v)}</div>`:''}${m.n?(BELOW.includes(m.n)?`<div class="nb${R.rep&&b===R.bars.length-1?' sh':''}">${esc(m.n)}</div>`:`<div class="nt">${esc(m.n)}</div>`):''}<div class="segs s${B.length}">`+B.map((c,s)=>`<div class="seg${sel.r===r&&sel.b===b&&sel.s===s?' on':''}" data-r="${r}" data-b="${b}" data-s="${s}"><span class="c">${fmt(c)||'&nbsp;'}</span></div>`).join('')+`</div></div>`}).join('')+`</div>${R.rep?`<div class="rr" data-r="${r}">${esc(R.rep)}</div>`:''}</div>`}).join('')}
-const KEYS1=['C','D','E','F','G','A','B'],KEYS2=['b','#','m','7','M7','m7','dim','aug','sus4','add9','6','9','m7b5','sus2','7sus4','dim7','m9','M9','b5','#5','b9','#9','(',')','/','%','N.C.'];
-const LABS=['Intro','A','B','C','サビ','間奏','Outro'];
-const BELOW=['D.C.','D.S.','Fine'],upM=m=>!!(m&&(m.v||(m.n&&!BELOW.includes(m.n)))),btm=R=>R.t==='c'&&!!(R.rep||(R.m&&R.m.some(m=>m&&BELOW.includes(m.n))));
-const MK=[['n:D.C.','D.C.'],['n:D.S.','D.S.'],['n:Fine','Fine'],['n:Coda','Coda'],['n:To Coda','To Coda'],['d','縦二重線'],['z','小節なし(二重取消線)']];
-function extra(R){const m=(R.m&&R.m[sel.b])||{};
- return `<div class="r"><span class="lab">セクション</span>${LABS.map(l=>`<button data-a="lab:${l}"${R.label===l?' style="outline:2px solid var(--ac)"':''}>${l}</button>`).join('')}<button data-a="lab:*">自由入力</button><button data-a="lab:">解除</button></div>
-<div class="r"><span class="lab">この小節に</span>${MK.map(([k,t])=>{const on=k.length===1?m[k]:k[0]==='v'?m.v===k.slice(2):m.n===k.slice(2);return `<button data-a="mk:${k}"${on?' style="outline:2px solid var(--ac)"':''}>${t}</button>`}).join('')}<button data-a="mk:x">解除</button></div>
-<div class="r"><span class="lab">段の繰り返し</span>${['×2','×3','×4'].map(v=>`<button data-a="rep:${v}"${R.rep===v?' style="outline:2px solid var(--ac)"':''}>${v}</button>`).join('')}<button data-a="rep:*">自由入力</button><button data-a="rep:">解除</button></div>`}
-let dockOpen=true,moreOpen=false,clip=null;
-function renderDock(){const d=$('#dock');if(!dockOpen){d.innerHTML='<button data-a="tog">▲ 入力パネルを開く</button>';return}renderDock0();d.insertAdjacentHTML('afterbegin','<div class="r" style="margin:0 0 6px"><button data-a="tog">▼ 閉じる</button><span class="lab">行</span><button data-a="rcopy">コピー</button><button data-a="rcut">切取</button><button data-a="rpaste"'+(clip?'':' disabled')+'>貼付</button></div>')}
-function QM(R){const m=(R.m&&R.m[sel.b])||{},on=c=>c?' style="outline:2px solid var(--ac)"':'';
- return `<button data-a="mk:s"${on(m.s)} title="Alt+[">‖:</button><button data-a="mk:e"${on(m.e)} title="Alt+]">:‖</button><button data-a="mk:v:1."${on(m.v==='1.')} title="Alt+1">1.</button><button data-a="mk:v:2."${on(m.v==='2.')} title="Alt+2">2.</button><button data-a="mk:x" title="Alt+0">解除</button>`}
-function markKey(e){if(!e.altKey||e.ctrlKey||e.metaKey)return false;const M={BracketLeft:'s',BracketRight:'e',Digit1:'v:1.',Digit2:'v:2.',Digit0:'x'},k=M[e.code];if(!k||S.rows[sel.r].t!=='c')return false;e.preventDefault();act('mk:'+k);return true}
-function renderDock0(){
- const R=S.rows[sel.r],d=$('#dock');
- const rowBtns=`<div class="r"><span class="lab">行</span><button data-a="rup">↑</button><button data-a="rdn">↓</button><button data-a="rdel">行削除</button><button data-a="addc">＋コード行</button><button data-a="addt">＋テキスト行</button></div>`;
- if(R.t==='c'){const B=R.bars[sel.b];
-  d.innerHTML=`<div class="r" style="margin:0"><input id="ci" placeholder="コード (例 Am7)" autocomplete="off" autocapitalize="off" value="${esc(B[sel.s])}"><button data-a="prev">◀</button><button data-a="next" style="background:var(--ac);color:#fff">次へ ▶</button></div>
-  <div class="r kp">${KEYS1.map(k=>`<button data-k="${k}" data-root="1">${k}</button>`).join('')}<button data-a="bs">⌫</button><button data-a="clr">消去</button></div>
-  <div class="r kp">${KEYS2.map(k=>`<button data-k="${k}">${k.replace(/#/g,'♯').replace(/b/g,'♭')}</button>`).join('')}</div>
-  <div class="r"><span class="lab">繰り返し</span>${QM(R)}</div>
-  <div class="r"><span class="lab">この小節の分割</span>${[1,2,4].map(n=>`<button data-a="sp${n}" ${B.length===n?'style="outline:2px solid var(--ac)"':''}>${n}</button>`).join('')}
-  <span class="lab">小節</span><button data-a="bdel">−</button><button data-a="badd" ${R.bars.length>=9?'disabled':''}>＋</button><input id="bn" type="number" min="1" max="9" value="${R.bars.length}" style="width:56px" title="この行の小節数(1〜9)"></div><details id="mr"${moreOpen?' open':''}><summary class="lab">セクション・繰り返し・行の操作 ▾</summary>${rowBtns}
-  ${extra(R)}<div class="hint">ルート(C〜B)をタップすると前のコードを確定して次へ進みます。PCは Enter / Space / Tab で次へ、空欄でBackspaceで戻る。<br>繰り返し記号(PC): Alt+[ ‖: / Alt+] :‖ / Alt+1 「1.」 / Alt+2 「2.」 / Alt+0 解除</div></details>`;
-  const i=$('#ci');i.oninput=()=>{S.rows[sel.r].bars[sel.b][sel.s]=i.value;renderSheet();persist()};
-  i.onkeydown=e=>{if(markKey(e))return;if(['Enter',' ','Tab'].includes(e.key)){e.preventDefault();e.shiftKey?mv(-1):mv(1)}else if(e.key==='Backspace'&&!i.value){e.preventDefault();mv(-1)}};
-  i.onblur=()=>commit();$('#mr').ontoggle=e=>{moreOpen=e.target.open};
-  $('#bn').onchange=e=>{const R=S.rows[sel.r],n=Math.max(1,Math.min(9,Math.round(+e.target.value)||R.bars.length));R.m=R.m||[];while(R.bars.length<n)R.bars.push(['']);R.bars.length=n;R.m.length=Math.min(R.m.length,n);clamp();commit();all()};
-  if(!matchMedia('(pointer:coarse)').matches)i.focus();
- }else{
-  d.innerHTML=`<textarea id="ta" placeholder="テキストを入力 (改行OK)">${esc(R.text)}</textarea>
-  <div class="r"><span class="lab">サイズ</span><select id="sz">${Object.entries(SIZES).map(([k,v])=>`<option value="${k}"${R.size===k?' selected':''}>${v[0]}</option>`).join('')}</select>
-  <span class="lab">フォント</span><select id="fo">${Object.entries(FONTS).map(([k,v])=>`<option value="${k}"${R.font===k?' selected':''}>${v[0]}</option>`).join('')}</select>
-  <select id="al">${[['left','左'],['center','中央'],['right','右']].map(([k,v])=>`<option value="${k}"${R.align===k?' selected':''}>${v}</option>`).join('')}</select>
-  <label><input type="checkbox" id="bo" ${R.bold?'checked':''}> 太字</label></div>
-  <div class="r"><span class="lab">色</span>${COLORS.map(c=>`<button class="sw${R.color===c?' on':''}" data-col="${c}" style="background:${c}"></button>`).join('')}</div>${rowBtns}`;
-  const T=()=>S.rows[sel.r];
-  $('#ta').oninput=e=>{T().text=e.target.value;renderSheet();persist()};$('#ta').onblur=commit;
-  $('#sz').onchange=e=>{T().size=e.target.value;renderSheet();commit()};
-  $('#fo').onchange=e=>{T().font=e.target.value;renderSheet();commit()};
-  $('#al').onchange=e=>{T().align=e.target.value;renderSheet();commit()};
-  $('#bo').onchange=e=>{T().bold=e.target.checked;renderSheet();commit()};
- }}
-function all(){renderSheet();renderDock();btns()}
-function flat(){const a=[];S.rows.forEach((R,r)=>{if(R.t==='c')R.bars.forEach((B,b)=>B.forEach((_,s)=>a.push([r,b,s])))});return a}
-function mv(dir){commit();const R0=S.rows[sel.r];let L=flat();if(R0.t!=='c'){sel={r:sel.r,b:0,s:0}}
- let i=L.findIndex(p=>p[0]===sel.r&&p[1]===sel.b&&p[2]===sel.s);
- if(i<0){i=dir>0?L.findIndex(p=>p[0]>sel.r)-1:L.length}
- let n=i+dir;
- if(n>=L.length){if(S.rows.length>=25)n=L.length-1;else{S.rows.push(mkRow(S.max));commit();L=flat();n=L.length-S.max}}
- if(n<0)n=0;const p=L[n];sel={r:p[0],b:p[1],s:p[2]};all()}
-function addRow(t){if(S.rows.length>=25){alert('段数は最大25段です（A4 1ページに収めるため）');return}const row=t==='c'?mkRow(S.max):mkTxt();S.rows.splice(sel.r+1,0,row);sel=t==='c'?{r:sel.r+1,b:0,s:0}:{r:sel.r+1};commit();all()}
-function act(a){const R=S.rows[sel.r];
- if(a==='tog'){dockOpen=!dockOpen;return renderDock()}
- if(a==='rcopy'){clip=JSON.stringify(R);return renderDock()}
- if(a==='rcut'){clip=JSON.stringify(R);if(S.rows.length>1)S.rows.splice(sel.r,1);else S.rows[0]=mkRow(S.max);clamp();commit();return all()}
- if(a==='rpaste'){if(!clip)return;if(S.rows.length>=25){alert('段数は最大25段です');return}S.rows.splice(sel.r+1,0,JSON.parse(clip));sel=S.rows[sel.r+1].t==='c'?{r:sel.r+1,b:0,s:0}:{r:sel.r+1};commit();return all()}
- if(a&&a.startsWith('rep:')){let v=a.slice(4);if(v==='*'){v=prompt('段に付ける文字 (例 ×2)',R.rep||'');if(v===null)return}R.rep=v.trim();commit();return all()}if(a==='next')return mv(1);if(a==='prev')return mv(-1);
- if(a==='addc')return addRow('c');if(a==='addt')return addRow('t');
- if(a&&a.startsWith('lab:')){let v=a.slice(4);if(v==='*'){v=prompt('セクション名',R.label||'');if(v===null)return}R.label=v.trim();commit();return all()}
- if(a&&a.startsWith('mk:')){const k=a.slice(3);R.m=R.m||[];while(R.m.length<R.bars.length)R.m.push({});let m=R.m[sel.b]=R.m[sel.b]||{};
-  if(k==='x')R.m[sel.b]={};else if(k.length===1)m[k]=m[k]?0:1;else{const f=k[0],val=k.slice(2);m[f]=m[f]===val?'':val}
-  commit();return all()}
- if(a==='rdel'){if(S.rows.length>1){S.rows.splice(sel.r,1);sel.r=Math.max(0,sel.r-1);clamp()}}
- else if(a==='rup'&&sel.r>0){[S.rows[sel.r-1],S.rows[sel.r]]=[S.rows[sel.r],S.rows[sel.r-1]];sel.r--}
- else if(a==='rdn'&&sel.r<S.rows.length-1){[S.rows[sel.r+1],S.rows[sel.r]]=[S.rows[sel.r],S.rows[sel.r+1]];sel.r++}
- else if(a==='badd'&&R.bars.length<9){R.m=R.m||[];while(R.m.length<R.bars.length)R.m.push({});R.m.splice(sel.b+1,0,{});R.bars.splice(sel.b+1,0,['']);sel.b++;sel.s=0}
- else if(a==='bdel'&&R.bars.length>1){if(R.m)R.m.splice(sel.b,1);R.bars.splice(sel.b,1);clamp()}
- else if(a&&a.startsWith('sp')){const n=+a[2],B=R.bars[sel.b];R.bars[sel.b]=Array.from({length:n},(_,i)=>B[i]||'');sel.s=Math.min(sel.s,n-1)}
- else if(a==='bs'){const B=R.bars[sel.b];B[sel.s]=B[sel.s].slice(0,-1)}
- else if(a==='clr'){R.bars[sel.b][sel.s]=''}
- commit();all()}
-$('#dock').onmousedown=e=>{if(e.target.closest('button'))e.preventDefault()};
-$('#dock').onclick=e=>{const b=e.target.closest('button');if(!b)return;
- if(b.dataset.col){S.rows[sel.r].color=b.dataset.col;commit();all();return}
- if(b.dataset.k){const R=S.rows[sel.r],B=R.bars[sel.b];let v=B[sel.s];
-  if(b.dataset.root&&v&&!v.endsWith('/')){commit();mv(1);const R2=S.rows[sel.r];R2.bars[sel.b][sel.s]=b.dataset.k;renderSheet();renderDock();return}
-  B[sel.s]=v+b.dataset.k;const i=$('#ci');if(i)i.value=B[sel.s];renderSheet();persist();return}
- act(b.dataset.a)};
-$('#rows').onclick=e=>{const rr=e.target.closest('.rr');if(rr){const r=+rr.dataset.r;const v=prompt('段に付ける文字 (例 ×2)',S.rows[r].rep||'');if(v!==null){S.rows[r].rep=v.trim();commit();renderSheet()}return}const lb=e.target.closest('.rl');if(lb){const r=+lb.dataset.r;const v=prompt('セクション名',S.rows[r].label||'');if(v!==null){S.rows[r].label=v.trim();commit();renderSheet()}return}
- const s=e.target.closest('.seg'),t=e.target.closest('.txt');
- if(s){commit();sel={r:+s.dataset.r,b:+s.dataset.b,s:+s.dataset.s};all()}
- else if(t){commit();sel={r:+t.dataset.r};all();const a=$('#ta');if(a)a.focus()}};
-$('#title').oninput=e=>{S.title=e.target.value;persist()};$('#sub').oninput=e=>{S.sub=e.target.value;persist()};
-$('#artist').oninput=e=>{S.artist=e.target.value;persist()};
-$('#title').onblur=$('#sub').onblur=$('#artist').onblur=commit;
-function setMax(n){n=Math.max(1,Math.min(9,Math.round(n)||S.max));const o=S.max;S.max=n;
- S.rows.forEach(R=>{if(R.t!=='c')return;if(R.bars.length===o){while(R.bars.length<n)R.bars.push(['']);if(R.bars.length>n){R.bars.length=n;if(R.m)R.m.length=Math.min(R.m.length,n)}}});
- clamp();commit();all()};
-$('#mx').onchange=e=>setMax(+e.target.value);$('#nr').onchange=e=>setRows(+e.target.value);addEventListener('resize',renderSheet);addEventListener('beforeprint',renderSheet);addEventListener('afterprint',renderSheet);document.querySelectorAll('[data-mx]').forEach(b=>b.onclick=()=>setMax(+b.dataset.mx));$('#undo').onclick=undo;$('#redo').onclick=redo;
-$('#pdf').onclick=exportPDF;
-$('#menu').onclick=()=>$('#md').classList.add('on');$('#mclose').onclick=closeMd;$('#md').onclick=e=>{if(e.target.id==='md')closeMd()};
-$('#tm').onclick=()=>{$('#tn').value=Math.max(-11,(+$('#tn').value||0)-1)};$('#tp').onclick=()=>{$('#tn').value=Math.min(11,(+$('#tn').value||0)+1)};
-$('#tdo').onclick=doTranspose;$('#fsave').onclick=saveFile;$('#fload').onclick=()=>$('#ff').click();$('#ff').onchange=e=>{loadFile(e.target.files[0]);e.target.value=''};$('#print').onclick=()=>{commit();window.print()};
-$('#new').onclick=()=>{if(confirm('内容を消して新規作成しますか？（戻すで復元できます）')){S={title:'',artist:'',sub:'',max:S.max,rows:Array.from({length:10},()=>mkRow(S.max))};sel={r:0,b:0,s:0};commit();all()}};
-document.addEventListener('keydown',e=>{const tg=e.target.tagName;if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT')return;if(markKey(e))return;
- if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();e.shiftKey?redo():undo()}
- else if((e.ctrlKey||e.metaKey)&&e.key==='y'){e.preventDefault();redo()}});
-new ResizeObserver(()=>{document.body.style.paddingBottom=($('#dock').offsetHeight+14)+'px'}).observe($('#dock'));clamp();all();requestAnimationFrame(renderSheet);if(document.fonts)document.fonts.ready.then(renderSheet);
-</script><script>if('serviceWorker' in navigator&&location.protocol!=='file:'){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{})})}</script>
-</body></html>
+
+   <div class="site-description">
+  <h1>Quiet Signal | クワイエットシグナル　<br>ギター・ベース用ハンドメイドエフェクターの製作・販売</h1>
+  <p>Handmade Guitar & Bass Effects Pedals (effector,stomp box) from Japan</p>
+
+<p style="margin-top:1rem; margin-bottom:0.1rem; font-weight:500; font-size:0.8rem;">【製作機種】</p>
+<div style="display:flex; flex-wrap:wrap; gap:0.4rem 0.75rem; margin-top:1rem; font-size:0.7rem; opacity:0.6; font-family:'Space Mono',monospace; letter-spacing:0.05em;">
+  <span>Booster</span><span>Overdrive</span><span>Distortion</span><span>Fuzz</span><span>Octave Fuzz</span><span>Preamp</span><span>EQ</span><span>Compressor</span><span>Noise Gate</span><span>Auto Wah</span><span>Ring Modulator</span><span>Tremolo</span><span>Chorus</span><span>Phaser</span><span>Delay</span><span>Reverb</span><span>AB Box</span><span>Slow Gear</span>
+  <span style="width:100%;"></span>
+  <span>ブースター</span><span>オーバードライブ</span><span>ディストーション</span><span>ファズ</span><span>オクターブファズ</span><span>プリアンプ</span><span>イコライザー</span><span>コンプレッサー</span><span>ノイズゲート</span><span>オートワウ</span><span>リングモジュレーター</span><span>トレモロ</span><span>コーラス</span><span>フェイザー</span><span>ディレイ</span><span>リバーブ</span><span>ABボックス</span><span>スローギア</span>
+</div>
+</div>
+      </div>
+
+    </section>
+  </main>
+  <footer>
+    &copy; 2026 Quiet Signal. All Rights Reserved.
+  </footer>
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+  <script>
+    function toggleMenu() {
+      document.querySelector('.nav-links').classList.toggle('open');
+    }
+    // メニュー外クリックで閉じる
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('nav')) {
+        document.querySelector('.nav-links').classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>
