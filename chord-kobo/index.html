@@ -90,7 +90,7 @@ if(!S||!S.rows)S={title:'',artist:'',sub:'',max:4,rows:Array.from({length:10},()
 while(S.rows.length<10)S.rows.push(mkRow(S.max||4));hist=[JSON.stringify(S)];
 function persist(){try{localStorage.setItem('chord1',JSON.stringify(S))}catch(e){}}
 function commit(){const j=JSON.stringify(S);if(j===hist[hi])return;hist=hist.slice(0,hi+1);hist.push(j);if(hist.length>150)hist.shift();hi=hist.length-1;persist();btns()}
-function load(j){S=JSON.parse(j);clamp();persist();all()}
+function load(j){typed=false;S=JSON.parse(j);clamp();persist();all()}
 function undo(){commit();if(hi>0){hi--;load(hist[hi])}}
 function redo(){if(hi<hist.length-1){hi++;load(hist[hi])}}
 function btns(){$('#undo').disabled=hi<=0;$('#redo').disabled=hi>=hist.length-1}
@@ -174,15 +174,15 @@ function renderSheet(){layout();
    return `<div class="txt${on?' on':''}${R.text?'':' empty'}" data-r="${r}" style="font-size:${SIZES[R.size][1]}cqw;color:${R.color};font-family:${FONTS[R.font][1]};text-align:${R.align};font-weight:${R.bold?700:400}">${esc(R.text||'テキスト').replace(/\n/g,'<br>')}</div>`}
   return `<div class="rw" style="--gp:${((window.GP&&GP[r])||1).toFixed(3)}cqw;--bt:${((window.BT&&BT[r])||0).toFixed(3)}cqw">${R.label?`<div class="rl${(R.m&&upM(R.m[0]))?'':' t'}" data-r="${r}">${esc(R.label)}</div>`:''}<div class="row">`+R.bars.map((B,b)=>{const m=(R.m&&R.m[b])||{};return `<div class="bar${m.s?' hs':''}${m.e?' he':''}${m.d?' bd':''}">${m.d?'<i class="dl"></i>':''}${m.z?'<i class="xx"></i>':''}${m.s?'<i class="rp l"></i>':''}${m.e?'<i class="rp r"></i>':''}${m.v?`<div class="vo">${esc(m.v)}</div>`:''}${m.n?(BELOW.includes(m.n)?`<div class="nb${R.rep&&b===R.bars.length-1?' sh':''}">${esc(m.n)}</div>`:`<div class="nt">${esc(m.n)}</div>`):''}<div class="segs s${B.length}">`+B.map((c,s)=>`<div class="seg${sel.r===r&&sel.b===b&&sel.s===s?' on':''}" data-r="${r}" data-b="${b}" data-s="${s}"><span class="c">${fmt(c)||'&nbsp;'}</span></div>`).join('')+`</div></div>`}).join('')+`</div>${R.rep?`<div class="rr" data-r="${r}">${esc(R.rep)}</div>`:''}</div>`}).join('')}
 const KEYS1=['C','D','E','F','G','A','B'],KEYS2=['b','#','m','7','M7','m7','dim','aug','sus4','add9','6','9','m7b5','sus2','7sus4','dim7','m9','M9','b5','#5','b9','#9','(',')','/','%','N.C.'];
-const LABS=['Intro','A','B','C','サビ','間奏','Outro'];
+const LABS=['Intro','A','B','C','サビ','間奏','solo','Outro'];
 const BELOW=['D.C.','D.S.','Fine'],upM=m=>!!(m&&(m.v||(m.n&&!BELOW.includes(m.n)))),btm=R=>R.t==='c'&&!!(R.rep||(R.m&&R.m.some(m=>m&&BELOW.includes(m.n))));
 const MK=[['n:D.C.','D.C.'],['n:D.S.','D.S.'],['n:Fine','Fine'],['n:Coda','Coda'],['n:To Coda','To Coda'],['d','縦二重線'],['z','小節なし(二重取消線)']];
 function extra(R){const m=(R.m&&R.m[sel.b])||{};
  return `<div class="r"><span class="lab">セクション</span>${LABS.map(l=>`<button data-a="lab:${l}"${R.label===l?' style="outline:2px solid var(--ac)"':''}>${l}</button>`).join('')}<button data-a="lab:*">自由入力</button><button data-a="lab:">解除</button></div>
 <div class="r"><span class="lab">この小節に</span>${MK.map(([k,t])=>{const on=k.length===1?m[k]:k[0]==='v'?m.v===k.slice(2):m.n===k.slice(2);return `<button data-a="mk:${k}"${on?' style="outline:2px solid var(--ac)"':''}>${t}</button>`}).join('')}<button data-a="mk:x">解除</button></div>
 <div class="r"><span class="lab">段の繰り返し</span>${['×2','×3','×4'].map(v=>`<button data-a="rep:${v}"${R.rep===v?' style="outline:2px solid var(--ac)"':''}>${v}</button>`).join('')}<button data-a="rep:*">自由入力</button><button data-a="rep:">解除</button></div>`}
-let dockOpen=true,moreOpen=false,clip=null;
-function renderDock(){const d=$('#dock');if(!dockOpen){d.innerHTML='<button data-a="tog">▲ 入力パネルを開く</button>';return}renderDock0();d.insertAdjacentHTML('afterbegin','<div class="r" style="margin:0 0 6px"><button data-a="tog">▼ 閉じる</button><span class="lab">行</span><button data-a="rcopy">コピー</button><button data-a="rcut">切取</button><button data-a="rpaste"'+(clip?'':' disabled')+'>貼付</button></div>')}
+let dockOpen=true,moreOpen=false,clip=null,typed=false;
+function renderDock(){const d=$('#dock'),st=d.scrollTop,mr=$('#mr');if(mr)moreOpen=mr.open;if(!dockOpen){d.innerHTML='<button data-a="tog">▲ 入力パネルを開く</button>';return}renderDock0();d.insertAdjacentHTML('afterbegin','<div class="r" style="margin:0 0 6px"><button data-a="tog">▼ 閉じる</button><span class="lab">行</span><button data-a="rcopy">コピー</button><button data-a="rcut">切取</button><button data-a="rpaste"'+(clip?'':' disabled')+'>貼付</button></div>');d.scrollTop=st}
 function QM(R){const m=(R.m&&R.m[sel.b])||{},on=c=>c?' style="outline:2px solid var(--ac)"':'';
  return `<button data-a="mk:s"${on(m.s)} title="Alt+[">‖:</button><button data-a="mk:e"${on(m.e)} title="Alt+]">:‖</button><button data-a="mk:v:1."${on(m.v==='1.')} title="Alt+1">1.</button><button data-a="mk:v:2."${on(m.v==='2.')} title="Alt+2">2.</button><button data-a="mk:x" title="Alt+0">解除</button>`}
 function markKey(e){if(!e.altKey||e.ctrlKey||e.metaKey)return false;const M={BracketLeft:'s',BracketRight:'e',Digit1:'v:1.',Digit2:'v:2.',Digit0:'x'},k=M[e.code];if(!k||S.rows[sel.r].t!=='c')return false;e.preventDefault();act('mk:'+k);return true}
@@ -196,12 +196,12 @@ function renderDock0(){
   <div class="r"><span class="lab">繰り返し</span>${QM(R)}</div>
   <div class="r"><span class="lab">この小節の分割</span>${[1,2,4].map(n=>`<button data-a="sp${n}" ${B.length===n?'style="outline:2px solid var(--ac)"':''}>${n}</button>`).join('')}
   <span class="lab">小節</span><button data-a="bdel">−</button><button data-a="badd" ${R.bars.length>=9?'disabled':''}>＋</button><input id="bn" type="number" min="1" max="9" value="${R.bars.length}" style="width:56px" title="この行の小節数(1〜9)"></div><details id="mr"${moreOpen?' open':''}><summary class="lab">セクション・繰り返し・行の操作 ▾</summary>${rowBtns}
-  ${extra(R)}<div class="hint">ルート(C〜B)をタップすると前のコードを確定して次へ進みます。PCは Enter / Space / Tab で次へ、空欄でBackspaceで戻る。<br>繰り返し記号(PC): Alt+[ ‖: / Alt+] :‖ / Alt+1 「1.」 / Alt+2 「2.」 / Alt+0 解除</div></details>`;
-  const i=$('#ci');i.oninput=()=>{S.rows[sel.r].bars[sel.b][sel.s]=i.value;renderSheet();persist()};
+  ${extra(R)}<div class="hint">ルート(C〜B)をタップすると前のコードを確定して次へ進みます（入力済みのコードを選んでからタップすると、その場で書き換わります）。％は押すと次へ進みます。PCは Enter / Space / Tab で次へ、空欄でBackspaceで戻る。<br>繰り返し記号(PC): Alt+[ ‖: / Alt+] :‖ / Alt+1 「1.」 / Alt+2 「2.」 / Alt+0 解除</div></details>`;
+  const i=$('#ci');i.oninput=()=>{typed=true;if(i.value.includes('%')){commit();S.rows[sel.r].bars[sel.b][sel.s]='%';mv(1);return}S.rows[sel.r].bars[sel.b][sel.s]=i.value;renderSheet();persist()};
   i.onkeydown=e=>{if(markKey(e))return;if(['Enter',' ','Tab'].includes(e.key)){e.preventDefault();e.shiftKey?mv(-1):mv(1)}else if(e.key==='Backspace'&&!i.value){e.preventDefault();mv(-1)}};
   i.onblur=()=>commit();$('#mr').ontoggle=e=>{moreOpen=e.target.open};
   $('#bn').onchange=e=>{const R=S.rows[sel.r],n=Math.max(1,Math.min(9,Math.round(+e.target.value)||R.bars.length));R.m=R.m||[];while(R.bars.length<n)R.bars.push(['']);R.bars.length=n;R.m.length=Math.min(R.m.length,n);clamp();commit();all()};
-  if(!matchMedia('(pointer:coarse)').matches)i.focus();
+  if(!matchMedia('(pointer:coarse)').matches){i.focus({preventScroll:true});if(!typed)i.select()}
  }else{
   d.innerHTML=`<textarea id="ta" placeholder="テキストを入力 (改行OK)">${esc(R.text)}</textarea>
   <div class="r"><span class="lab">サイズ</span><select id="sz">${Object.entries(SIZES).map(([k,v])=>`<option value="${k}"${R.size===k?' selected':''}>${v[0]}</option>`).join('')}</select>
@@ -218,7 +218,7 @@ function renderDock0(){
  }}
 function all(){renderSheet();renderDock();btns()}
 function flat(){const a=[];S.rows.forEach((R,r)=>{if(R.t==='c')R.bars.forEach((B,b)=>B.forEach((_,s)=>a.push([r,b,s])))});return a}
-function mv(dir){commit();const R0=S.rows[sel.r];let L=flat();if(R0.t!=='c'){sel={r:sel.r,b:0,s:0}}
+function mv(dir){commit();typed=false;const R0=S.rows[sel.r];let L=flat();if(R0.t!=='c'){sel={r:sel.r,b:0,s:0}}
  let i=L.findIndex(p=>p[0]===sel.r&&p[1]===sel.b&&p[2]===sel.s);
  if(i<0){i=dir>0?L.findIndex(p=>p[0]>sel.r)-1:L.length}
  let n=i+dir;
@@ -226,10 +226,11 @@ function mv(dir){commit();const R0=S.rows[sel.r];let L=flat();if(R0.t!=='c'){sel
  if(n<0)n=0;const p=L[n];sel={r:p[0],b:p[1],s:p[2]};all()}
 function addRow(t){if(S.rows.length>=25){alert('段数は最大25段です（A4 1ページに収めるため）');return}const row=t==='c'?mkRow(S.max):mkTxt();S.rows.splice(sel.r+1,0,row);sel=t==='c'?{r:sel.r+1,b:0,s:0}:{r:sel.r+1};commit();all()}
 function act(a){const R=S.rows[sel.r];
+ if(a==='bs'||a==='clr')typed=true;else if(a!=='tog'&&a!=='rcopy'&&a!=='next'&&a!=='prev')typed=false;
  if(a==='tog'){dockOpen=!dockOpen;return renderDock()}
  if(a==='rcopy'){clip=JSON.stringify(R);return renderDock()}
  if(a==='rcut'){clip=JSON.stringify(R);if(S.rows.length>1)S.rows.splice(sel.r,1);else S.rows[0]=mkRow(S.max);clamp();commit();return all()}
- if(a==='rpaste'){if(!clip)return;if(S.rows.length>=25){alert('段数は最大25段です');return}S.rows.splice(sel.r+1,0,JSON.parse(clip));sel=S.rows[sel.r+1].t==='c'?{r:sel.r+1,b:0,s:0}:{r:sel.r+1};commit();return all()}
+ if(a==='rpaste'){if(!clip)return;S.rows[sel.r]=JSON.parse(clip);sel=S.rows[sel.r].t==='c'?{r:sel.r,b:0,s:0}:{r:sel.r};commit();return all()}
  if(a&&a.startsWith('rep:')){let v=a.slice(4);if(v==='*'){v=prompt('段に付ける文字 (例 ×2)',R.rep||'');if(v===null)return}R.rep=v.trim();commit();return all()}if(a==='next')return mv(1);if(a==='prev')return mv(-1);
  if(a==='addc')return addRow('c');if(a==='addt')return addRow('t');
  if(a&&a.startsWith('lab:')){let v=a.slice(4);if(v==='*'){v=prompt('セクション名',R.label||'');if(v===null)return}R.label=v.trim();commit();return all()}
@@ -248,13 +249,17 @@ function act(a){const R=S.rows[sel.r];
 $('#dock').onmousedown=e=>{if(e.target.closest('button'))e.preventDefault()};
 $('#dock').onclick=e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.col){S.rows[sel.r].color=b.dataset.col;commit();all();return}
- if(b.dataset.k){const R=S.rows[sel.r],B=R.bars[sel.b];let v=B[sel.s];
-  if(b.dataset.root&&v&&!v.endsWith('/')){commit();mv(1);const R2=S.rows[sel.r];R2.bars[sel.b][sel.s]=b.dataset.k;renderSheet();renderDock();return}
-  B[sel.s]=v+b.dataset.k;const i=$('#ci');if(i)i.value=B[sel.s];renderSheet();persist();return}
+ if(b.dataset.k){const R=S.rows[sel.r],B=R.bars[sel.b],k=b.dataset.k;let v=B[sel.s];
+  if(k==='%'){commit();B[sel.s]='%';mv(1);return}
+  if(v==='%')v='';
+  if(b.dataset.root&&v&&!v.endsWith('/')){
+   if(typed){commit();mv(1);S.rows[sel.r].bars[sel.b][sel.s]=k;typed=true;renderSheet();renderDock();return}
+   commit();B[sel.s]=k;typed=true;renderSheet();renderDock();return}
+  B[sel.s]=v+k;typed=true;const i=$('#ci');if(i)i.value=B[sel.s];renderSheet();persist();return}
  act(b.dataset.a)};
 $('#rows').onclick=e=>{const rr=e.target.closest('.rr');if(rr){const r=+rr.dataset.r;const v=prompt('段に付ける文字 (例 ×2)',S.rows[r].rep||'');if(v!==null){S.rows[r].rep=v.trim();commit();renderSheet()}return}const lb=e.target.closest('.rl');if(lb){const r=+lb.dataset.r;const v=prompt('セクション名',S.rows[r].label||'');if(v!==null){S.rows[r].label=v.trim();commit();renderSheet()}return}
  const s=e.target.closest('.seg'),t=e.target.closest('.txt');
- if(s){commit();sel={r:+s.dataset.r,b:+s.dataset.b,s:+s.dataset.s};all()}
+ if(s){commit();typed=false;sel={r:+s.dataset.r,b:+s.dataset.b,s:+s.dataset.s};all()}
  else if(t){commit();sel={r:+t.dataset.r};all();const a=$('#ta');if(a)a.focus()}};
 $('#title').oninput=e=>{S.title=e.target.value;persist()};$('#sub').oninput=e=>{S.sub=e.target.value;persist()};
 $('#artist').oninput=e=>{S.artist=e.target.value;persist()};
