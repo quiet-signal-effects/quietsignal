@@ -78,6 +78,27 @@
       opacity: 0.65;
     }
 
+    .app-btn {
+      align-self: flex-start;
+      display: inline-block;
+      padding: 0.8rem 1.4rem;
+      background: #24140e;
+      color: #b0e0e6;
+      border: 2px solid #24140e;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      line-height: 1.5;
+      transition: background 0.2s, color 0.2s;
+    }
+    /* カードにマウスを乗せると、背景が暗くなるので色を反転 */
+    .app-card:hover .app-btn {
+      background: #b0e0e6;
+      color: #24140e;
+      border-color: #b0e0e6;
+    }
+
     .app-note {
       font-family: 'Space Mono', monospace;
       font-size: 0.68rem;
@@ -148,7 +169,8 @@
             <div class="app-name">まなびオシロ</div>
             <div class="app-num">01</div>
           </div>
-          <div class="app-desc">音を入力して、音の高さや大きさによる波形の違いを目で見て学べるオシロスコープ。表示時間のレンジも、観察しやすい時間に変更できます。信号発生では、周波数を指定して正弦波・三角波・矩形波を出力可能。PCのマイクにも、オーディオインターフェイスにも対応しています。</div>↡ここをクリックするとダウンロードを開始します。
+          <div class="app-desc">音を入力して、音の高さや大きさによる波形の違いを目で見て学べるオシロスコープ。表示時間のレンジも、観察しやすい時間に変更できます。信号発生では、周波数を指定して正弦波・三角波・矩形波を出力可能。PCのマイクにも、オーディオインターフェイスにも対応しています。</div>
+          <span class="app-btn">↓ ここをクリックするとダウンロードを開始します</span>
           <div class="app-note">対応:Windows(ZIPファイル)<br>使い方:ダウンロード後にZIPを解凍し、中のEXEファイルを起動</div>
           <div class="app-open">Download for Windows ↓</div>
         </a>
