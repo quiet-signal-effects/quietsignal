@@ -39,7 +39,8 @@
       transition: background 0.2s, color 0.2s;
     }
     .app-card:last-child { border-right: none; }
-    .app-card:hover { background: #24140e; color: #b0e0e6; }
+    /* マウスを乗せたときは、うすい水色にする(文字色は変えない) */
+    .app-card:hover { background: rgba(176, 224, 230, 0.4); }
 
     .app-head {
       display: flex;
@@ -82,9 +83,10 @@
       align-self: flex-start;
       display: inline-block;
       padding: 0.8rem 1.4rem;
-      background: #24140e;
-      color: #b0e0e6;
-      border: 2px solid #24140e;
+      background: #2f7f8c;
+      color: #ffffff;
+      border: 2px solid #2f7f8c;
+      border-radius: 6px;
       font-family: 'Space Mono', monospace;
       font-size: 0.78rem;
       font-weight: 700;
@@ -92,11 +94,10 @@
       line-height: 1.5;
       transition: background 0.2s, color 0.2s;
     }
-    /* カードにマウスを乗せると、背景が暗くなるので色を反転 */
+    /* カードにマウスを乗せると、ボタンが少し濃くなる */
     .app-card:hover .app-btn {
-      background: #b0e0e6;
-      color: #24140e;
-      border-color: #b0e0e6;
+      background: #256b76;
+      border-color: #256b76;
     }
 
     .app-note {
