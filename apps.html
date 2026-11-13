@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apps — Quiet Signal</title>
+  <meta property="og:title" content="Apps | Quiet Signal">
+  <meta name="description" content="Quiet Signalが作った、音楽と音のためのアプリ集。Apps by Quiet Signal.">
+  <meta property="og:description" content="Quiet Signalが作った、音楽と音のためのアプリ集。">
+  <meta property="og:image" content="https://quietsignal.jp/images/hero2.jpg">
+  <meta property="og:url" content="https://quietsignal.jp/apps.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Quiet Signal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Apps | Quiet Signal">
+  <meta name="twitter:description" content="Quiet Signalが作った、音楽と音のためのアプリ集。">
+  <meta name="twitter:image" content="https://quietsignal.jp/images/hero2.jpg">
+  <link rel="canonical" href="https://quietsignal.jp/apps.html">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .app-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      border: 2px solid #24140e;
+    }
+
+    .app-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      padding: 2rem 1.75rem;
+      color: inherit;
+      text-decoration: none;
+      border-right: 2px solid #24140e;
+      transition: background 0.2s, color 0.2s;
+    }
+    .app-card:last-child { border-right: none; }
+    .app-card:hover { background: #24140e; color: #b0e0e6; }
+
+    .app-head {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .app-head .app-name { flex: 1; }
+
+    .app-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 22%;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .app-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      line-height: 1;
+      opacity: 0.25;
+    }
+
+    .app-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      line-height: 1.5;
+    }
+
+    .app-desc {
+      font-size: 0.82rem;
+      line-height: 1.8;
+      opacity: 0.65;
+    }
+
+    .app-note {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      line-height: 1.8;
+      opacity: 0.55;
+    }
+
+    .app-open {
+      margin-top: auto;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+    .app-card:hover .app-open { opacity: 0.9; }
+
+    @media (max-width: 768px) {
+      .app-list { grid-template-columns: 1fr; }
+      .app-card { border-right: none; border-bottom: 2px solid #24140e; }
+      .app-card:last-child { border-bottom: none; }
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NPM7YN1HEP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NPM7YN1HEP');
+  </script>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="images/logo.png" width="120" alt="Quiet Signal" class="nav-logo-img"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="works.html">Works</a></li>
+      <li><a href="sound.html">Sound</a></li>
+      <li><a href="store.html">Store</a></li>
+      <li><a href="apps.html" class="active">Apps</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-hamburger" onclick="toggleMenu()" aria-label="メニュー">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <main>
+    <div class="page-header" data-title="APPS">
+      <p class="section-label">// Music & Sound Apps</p>
+      <h1>Apps</h1>
+    </div>
+
+    <div class="container">
+      <p style="font-size:0.88rem; opacity:0.65; margin-bottom:2rem;">
+        コード譜クイック工房は、ブラウザで開くだけですぐ使えます。まなびオシロは、Windows用のZIPファイルをダウンロードし、解凍して使います。
+      </p>
+
+      <div class="app-list fade-in">
+
+        <a class="app-card" href="downloads/manabi-oshiro.zip" download>
+          <div class="app-head">
+            <img class="app-icon" src="images/app-manabi-oshiro.png" width="80" height="80" alt="まなびオシロ アイコン">
+            <div class="app-name">まなびオシロ</div>
+            <div class="app-num">01</div>
+          </div>
+          <div class="app-desc">音を入力して、音の高さや大きさによる波形の違いを目で見て学べるオシロスコープ。表示時間のレンジも、観察しやすい時間に変更できます。信号発生では、周波数を指定して正弦波・三角波・矩形波を出力可能。PCのマイクにも、オーディオインターフェイスにも対応しています。</div>
+          <div class="app-note">対応:Windows(ZIPファイル)<br>使い方:ダウンロード後にZIPを解凍し、中のEXEファイルを起動</div>
+          <div class="app-open">Download for Windows ↓</div>
+        </a>
+
+        <a class="app-card" href="chord-kobo/index.html">
+          <div class="app-head">
+            <img class="app-icon" src="images/app-chord-quick.png" width="80" height="80" alt="コード譜クイック工房 アイコン">
+            <div class="app-name">コード譜クイック工房</div>
+            <div class="app-num">02</div>
+          </div>
+          <div class="app-desc">コード譜をクイックに作れるツール。メジャー、マイナー、セブンスはもちろん、基本的なコードネームにすべて対応。繰り返し記号、セクション、小節数の変更、A4用紙に入る段数の変更、×数字、1小節を4分割まで入力できます。部分的な小節数の変更も可能。印刷とPDF出力に対応しています。</div>
+          <div class="app-note">対応:ブラウザ(ダウンロード・インストール不要)<br>使い方:このカードを押すと、そのまま開きます</div>
+          <div class="app-open">Open in Browser →</div>
+        </a>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2026 Quiet Signal. All Rights Reserved.
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+  <script>
+    function toggleMenu() {
+      document.querySelector('.nav-links').classList.toggle('open');
+    }
+    // メニュー外クリックで閉じる
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('nav')) {
+        document.querySelector('.nav-links').classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>
