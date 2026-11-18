@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>疑似インダクタ回路シュミレーター | Simulated Inductor Circuit / Gyrator</title><style>:root{font-family:system-ui,'Noto Sans JP',sans-serif;color:#172434;background:#f3f6f8}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1160px;margin:auto;padding:22px}h1{font-size:1.55rem;margin:0 0 7px}p{line-height:1.6;color:#526171}.panel{background:white;border:1px solid #dbe3ea;border-radius:15px;padding:18px;margin-top:16px;box-shadow:0 3px 12px #1a30400a}h2{font-size:1.06rem;margin:0 0 12px}.schematic{width:100%;height:auto;display:block}.inputs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.field.slider-field{grid-column:span 2}.field{border:1px solid #e0e6eb;border-radius:8px;padding:7px}.field:not(.slider-field){display:flex;align-items:center;gap:7px}.field:not(.slider-field) label{display:block;flex:0 0 34px;font-size:.82rem;font-weight:650;margin:0;white-space:nowrap}.field:not(.slider-field) .entry{flex:1;min-width:0}.field.slider-field label{display:block;font-size:.82rem;font-weight:650;margin-bottom:4px}.entry{display:flex;gap:4px}.entry input{width:100%;min-width:0;padding:6px;font-size:.88rem;border:1px solid #cbd5df;border-radius:7px;font:inherit}.entry select{width:62px;flex-shrink:0;padding:5px 1px;font-size:.8rem;border:1px solid #cbd5df;border-radius:7px;background:white}.field input[type=range]{width:100%;accent-color:#177c9d}.field small{color:#64748b;font-size:.69rem;line-height:1.3;display:block}.results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.result{background:#f0f7fa;border-radius:8px;padding:9px 7px;min-width:0}.result span{display:block;color:#506575;font-size:.72rem;white-space:nowrap}.result strong{display:block;font-size:1rem;white-space:nowrap;font-variant-numeric:tabular-nums}canvas{width:100%;height:420px;display:block;touch-action:pan-y}.plot-wrap{position:relative}.plot-tooltip{position:absolute;pointer-events:none;display:none;background:#172434;color:#fff;padding:6px 9px;border-radius:7px;font-size:.78rem;line-height:1.5;white-space:nowrap;box-shadow:0 3px 9px #0002}.note{font-size:.87rem;background:#fff9e8;border-left:3px solid #d5a33c;padding:10px 13px;border-radius:5px}#error{color:#b42318;font-weight:600;min-height:1.5em}.formula{font-size:.78rem;line-height:1.65;color:#475569}.formula code{font-size:.95em;overflow-wrap:anywhere}.caption{font-size:.85rem;color:#63758a}@media(max-width:720px){.inputs{grid-template-columns:repeat(2,minmax(0,1fr))}.field.slider-field{grid-column:span 1}}@media(max-width:600px){.result{padding:7px 4px}.result span{font-size:.59rem;letter-spacing:-.04em}.result strong{font-size:.76rem;letter-spacing:-.03em}.results{gap:4px}.wrap{padding:12px}.panel{padding:12px}canvas{height:310px}.field.slider-field{grid-column:span 2}.schematic-holder{overflow-x:auto}.schematic{min-width:650px}}.math-display{display:flex;align-items:center;justify-content:center;gap:.35em;flex-wrap:wrap;font-family:Georgia,"Times New Roman",serif;font-size:1.45rem;color:#172434;margin:12px 0 18px;line-height:1.2}.math-display sub{font-size:.57em}.math-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.2;max-width:100%}.math-num{display:block;text-align:center;padding:0 .3em .12em;width:100%;border-bottom:1.5px solid currentColor}.math-den{display:flex;align-items:flex-start;justify-content:center;white-space:nowrap;padding:.14em .25em 0;font-size:.94em}.math-sqrt{display:inline-flex;align-items:stretch;white-space:nowrap}.math-root{font-size:1.75em;line-height:.83;transform:scaleX(.85);transform-origin:right center}.math-radicand{border-top:1.5px solid currentColor;padding:.10em .10em 0 .04em;margin-top:.08em}.math-inline{display:inline-flex;vertical-align:middle;font-family:Georgia,"Times New Roman",serif;font-size:1.07em;gap:.2em;align-items:center}.math-inline .math-frac{font-size:.94em}@media(max-width:600px){.math-display{font-size:1.08rem}.math-den{font-size:.9em}}
+/* v22: circuit, component values and response in one desktop viewport */
+.wrap{max-width:1480px;padding:12px 18px}
+.wrap>h1{font-size:1.38rem;margin-bottom:3px}
+.wrap>p:first-of-type{font-size:.86rem;margin:4px 0 8px;line-height:1.4}
+.dashboard-top{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,1fr);gap:12px;align-items:start}
+.dashboard-right{display:flex;flex-direction:column;gap:12px;min-width:0}
+.dashboard-top .panel{margin-top:0;padding:11px 13px}
+.dashboard-top h2{font-size:.96rem;margin-bottom:7px}
+.dashboard-top .schematic{max-height:570px;width:100%;object-fit:contain}
+.dashboard-top .caption{font-size:.72rem;line-height:1.3;margin:5px 0 0}
+.dashboard-right .inputs{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.dashboard-right .field{padding:4px 5px}
+.dashboard-right .field:not(.slider-field) label{font-size:.74rem;flex-basis:30px}
+.dashboard-right .entry input{padding:4px;font-size:.78rem}
+.dashboard-right .entry select{width:54px;padding:3px 1px;font-size:.74rem}
+.dashboard-right .field.slider-field{grid-column:span 1}
+.dashboard-right .field.slider-field label{font-size:.72rem;margin-bottom:1px}
+.dashboard-right .field.slider-field small{font-size:.62rem}
+.dashboard-right .field input[type=range]{margin:3px 0;width:100%}
+.dashboard-right canvas{height:250px}
+@media(min-width:1200px){.dashboard-right canvas{height:285px}}
+@media(max-width:900px){.dashboard-top{grid-template-columns:1fr}.dashboard-right .inputs{grid-template-columns:repeat(4,minmax(0,1fr))}.dashboard-right .field.slider-field{grid-column:span 2}.dashboard-top .schematic{max-height:none}.dashboard-right canvas{height:320px}}
+@media(max-width:600px){.dashboard-right .inputs{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-right .field.slider-field{grid-column:span 2}.dashboard-right canvas{height:300px}.wrap{padding:10px}.dashboard-top{gap:9px}.dashboard-right{gap:9px}}
+
+/* v23: compact controls, enlarged graph, smaller circuit */
+.wrap{max-width:1580px;padding:10px 16px}
+.wrap>h1{font-size:1.32rem;margin-bottom:2px}
+.wrap>p:first-of-type{margin:3px 0 7px;font-size:.79rem}
+.dashboard-top{grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:10px}
+.dashboard-right{gap:8px}
+.dashboard-top .panel{padding:9px 11px}
+.dashboard-top h2{font-size:.88rem;margin-bottom:5px}
+.dashboard-top .schematic{max-height:465px}
+.dashboard-right .inputs{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.dashboard-right .field{padding:3px 5px;min-width:0}
+.dashboard-right .field:not(.slider-field) label{flex:0 0 28px;font-size:.73rem}
+.dashboard-right .entry{gap:3px}
+.dashboard-right .entry input{padding:3px 4px;font-size:.76rem}
+.dashboard-right .entry select{width:48px;padding:2px 0;font-size:.71rem}
+.dashboard-right .field.slider-field{grid-column:span 1}
+.dashboard-right .field.slider-field label{font-size:.69rem;margin:0;white-space:nowrap;flex:none}
+.dashboard-right .field.slider-field:nth-last-child(2){grid-column:1 / span 1}
+.dashboard-right .field.slider-field:nth-last-child(1){grid-column:2 / span 1}
+.slider-row{display:flex;align-items:center;gap:5px}
+.dashboard-right .field .slider-row input[type=range]{min-width:0;flex:1;width:50px;margin:0;height:16px}
+.dashboard-right .field .slider-percent{font-size:.65rem;text-align:center;line-height:1.05;margin-top:0}
+.dashboard-right canvas{height:370px}
+@media(min-width:1200px){.dashboard-right canvas{height:430px}}
+@media(min-width:1450px){.dashboard-right canvas{height:470px}}
+@media(max-width:1050px){.dashboard-top{grid-template-columns:1fr}.dashboard-top .schematic{max-height:450px}.dashboard-right canvas{height:370px}}
+@media(max-width:600px){.dashboard-right .inputs{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-right .field.slider-field:nth-last-child(2),.dashboard-right .field.slider-field:nth-last-child(1){grid-column:auto}.dashboard-right canvas{height:320px}.dashboard-top .schematic{max-height:none}}
+
+/* v24: compact top row, full-width graph */
+.dashboard-top{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);align-items:start;gap:10px}
+.dashboard-top .schematic{max-height:340px;width:100%;object-fit:contain}
+.dashboard-right{display:block}
+.dashboard-right .inputs{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.dashboard-right .field.slider-field:nth-last-child(2){grid-column:1 / span 2}
+.dashboard-right .field.slider-field:nth-last-child(1){grid-column:3 / span 2}
+.dashboard-right .field.slider-field .slider-percent{display:flex;justify-content:space-between;align-items:center;padding:0 2px}
+.graph-panel{margin-top:10px;padding:10px 14px}
+.graph-panel canvas{height:clamp(290px,39vh,430px)}
+.graph-panel .caption{margin:4px 0 0;font-size:.72rem}
+.dashboard-top .panel{margin-top:0}
+@media(max-width:1050px){.dashboard-top{grid-template-columns:1fr}.dashboard-top .schematic{max-height:310px}.graph-panel canvas{height:340px}}
+@media(max-width:600px){.dashboard-right .inputs{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-right .field.slider-field:nth-last-child(2){grid-column:1}.dashboard-right .field.slider-field:nth-last-child(1){grid-column:2}.graph-panel canvas{height:300px}}
+
+/* v25: left schematic + controls, right large plot; fit dashboard in desktop viewport */
+.dashboard-top{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:10px;align-items:stretch}
+.dashboard-left{display:flex;flex-direction:column;gap:8px;min-width:0}
+.dashboard-left>.panel{margin:0;padding:8px 10px}
+.dashboard-left .schematic{max-height:clamp(245px,44vh,385px);width:100%;height:auto;object-fit:contain}
+.dashboard-left .caption{font-size:.66rem;margin:1px 0 0}
+.dashboard-left .dashboard-right{display:block;min-width:0}
+.dashboard-left .dashboard-right .panel{margin:0;padding:8px 10px}
+.dashboard-left .dashboard-right .inputs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.dashboard-left .dashboard-right .field{padding:3px 4px}
+.dashboard-left .dashboard-right .field:not(.slider-field) label{flex-basis:24px;font-size:.69rem}
+.dashboard-left .dashboard-right .entry input{font-size:.73rem;padding:3px 2px}
+.dashboard-left .dashboard-right .entry select{width:43px;font-size:.67rem}
+.dashboard-left .dashboard-right .field.slider-field:nth-last-child(2){grid-column:1 / span 2}
+.dashboard-left .dashboard-right .field.slider-field:nth-last-child(1){grid-column:3 / span 2}
+.dashboard-left .dashboard-right .slider-percent{padding-left:31px;display:flex;justify-content:space-between;text-align:center;font-size:.65rem}
+.dashboard-left .dashboard-right .slider-percent span{min-width:25px}
+.dashboard-top>.graph-panel{margin:0;padding:8px 10px;min-width:0;display:flex;flex-direction:column}
+.dashboard-top>.graph-panel .plot-wrap{flex:1;min-height:0}
+.dashboard-top>.graph-panel canvas{height:clamp(400px,calc(100dvh - 175px),760px);width:100%}
+.dashboard-top>.graph-panel .caption{font-size:.65rem;line-height:1.25}
+@media(min-width:1051px){.dashboard-top>.graph-panel{align-self:stretch}.dashboard-top>.graph-panel .plot-wrap{display:flex}.dashboard-top>.graph-panel canvas{height:auto;min-height:440px;flex:1}}
+@media(max-width:1050px){.dashboard-top{grid-template-columns:1fr}.dashboard-left .schematic{max-height:320px}.dashboard-top>.graph-panel canvas{height:380px}}
+@media(max-width:600px){.dashboard-left .dashboard-right .inputs{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-left .dashboard-right .field.slider-field:nth-last-child(2){grid-column:1}.dashboard-left .dashboard-right .field.slider-field:nth-last-child(1){grid-column:2}.dashboard-top>.graph-panel canvas{height:310px}}
+
+.taper-select{width:62px;flex:none;font-size:.7rem;padding:3px 1px;border:1px solid #cbd5df;border-radius:6px;background:#fff;color:#172434}.dashboard-left .dashboard-right .slider-row{gap:4px}.dashboard-left .dashboard-right .slider-percent{padding-right:65px}.dashboard-left .dashboard-right .field.slider-field{min-width:0}
+/* v27: R row (4), C row (3), RV row (2), then sliders */
+.dashboard-left .dashboard-right .inputs>.field:nth-child(8){grid-column:1 / span 2}
+.dashboard-left .dashboard-right .inputs>.field:nth-child(9){grid-column:3 / span 2}
+.dashboard-left .dashboard-right .slider-percent span:first-child{transform:translateX(8px)}
+@media(max-width:600px){
+ .dashboard-left .dashboard-right .inputs>.field:nth-child(8){grid-column:1}
+ .dashboard-left .dashboard-right .inputs>.field:nth-child(9){grid-column:2}
+}
+/* v26: title and English/description side by side */
+.app-header{display:flex;align-items:center;gap:20px;margin:0 0 8px;min-width:0}
+.app-header h1{font-size:1.32rem;line-height:1.3;white-space:nowrap;margin:0;flex:none}
+.app-header-detail{min-width:0;display:flex;flex-direction:column;gap:2px}
+.app-header-en{font-size:.82rem;font-weight:600;color:#64748b;line-height:1.25}
+.app-header-detail p{font-size:.76rem;color:#526171;line-height:1.3;margin:0}
+@media(max-width:850px){.app-header{flex-wrap:wrap;gap:5px 14px}.app-header h1{white-space:normal}.app-header-detail{flex-basis:100%}}
+
+/* v29: place each taper selector directly under its RV label */
+.dashboard-left .dashboard-right .field.slider-field .slider-row{display:flex;align-items:center;gap:7px}
+.dashboard-left .dashboard-right .slider-control-label{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;flex:0 0 60px;min-width:0}
+.dashboard-left .dashboard-right .slider-control-label label{margin:0;font-size:.72rem;line-height:1}
+.dashboard-left .dashboard-right .slider-control-label .taper-select{width:58px;max-width:100%;font-size:.68rem;padding:2px 1px}
+.dashboard-left .dashboard-right .slider-track{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.dashboard-left .dashboard-right .slider-track input[type=range]{width:100%;min-width:0;flex:none;margin:0}
+.dashboard-left .dashboard-right .slider-track .slider-percent{padding:0 2px;display:flex;justify-content:space-between;width:100%;margin-top:2px}
+.dashboard-left .dashboard-right .slider-track .slider-percent span:first-child{transform:none}
+
+/* v30: in-app user guide, hidden until requested */
+.app-header{position:relative;padding-right:92px}
+.help-open{position:absolute;right:0;top:0;border:1px solid #a7c7d4;background:#fff;color:#126784;border-radius:8px;padding:7px 12px;font:600 .82rem system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.help-open:hover,.help-open:focus-visible{background:#eaf6fa}
+.help-dialog{border:1px solid #cad9e2;border-radius:14px;padding:0;width:min(760px,calc(100vw - 32px));max-height:min(86vh,900px);box-shadow:0 16px 60px #142a3b55;color:#172434}
+.help-dialog::backdrop{background:#102535aa}
+.help-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#f0f7fa;border-bottom:1px solid #dbe3ea;position:sticky;top:0;z-index:1}
+.help-heading h2{margin:0;font-size:1.13rem}
+.help-close{background:white;border:1px solid #c7d6df;border-radius:7px;font-size:1.2rem;line-height:1;padding:6px 10px;cursor:pointer}
+.help-content{padding:5px 23px 24px;font-size:.9rem;line-height:1.75}
+.help-content h3{font-size:1.02rem;color:#173b50;margin:23px 0 8px;border-bottom:1px solid #e2e8ee;padding-bottom:5px}
+.help-content p{margin:7px 0;color:#35485a}
+.help-content ul,.help-content ol{padding-left:1.6em;margin:7px 0}
+.help-content li{margin:4px 0}
+.help-content .math-display{font-size:1.18rem;margin:9px 0 13px}
+.help-content .math-den{font-size:.9em}
+@media(max-width:600px){.app-header{padding-right:0;padding-top:38px}.help-open{left:0;right:auto;top:0}.help-content{padding:4px 16px 20px;font-size:.85rem}}
+</style></head><body><main class="wrap"><header class="app-header"><button type="button" class="help-open" id="help-open" aria-haspopup="dialog" aria-controls="help-dialog">？ 使い方</button><h1>疑似インダクタ回路シュミレーター</h1><div class="app-header-detail"><div class="app-header-en">Simulated Inductor Circuit / Gyrator</div><p>オペアンプによるシミュレーテッドインダクタ回路、ジャイレータ、アクティブイコライザー回路のシミュレーターです。</p></div></header><div class="dashboard-top"><div class="dashboard-left"><section class="panel"><h2>回路図</h2><div class="schematic-holder"><svg aria-label="RV1とRV2を含む二段オペアンプEQ回路" class="schematic" role="img" viewbox="0 0 1000 850" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrow" markerheight="8" markerwidth="8" orient="auto" refx="6" refy="3"><path d="M0 0 L6 3 L0 6 Z" fill="#243b53"></path></marker></defs><g fill="none" stroke="#243b53" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" transform="translate(0,-18)"><circle cx="55" cy="90" r="6"></circle><path d="M61 90 H130 M205 90 H315 H625"></path><rect height="30" width="75" x="130" y="75"></rect><path d="M315 90 V180 M315 280 V335 H570"></path><rect height="100" width="26" x="302" y="180"></rect><path d="M225 230 H302" marker-end="url(#arrow)"></path><path d="M225 230 V355"></path><path d="M225 355 V370 M225 390 V465 M225 465 V480 M225 500 V540"></path><path d="M197 370 H253 M197 390 H253 M197 480 H253 M197 500 H253"></path><path d="M225 465 V445 H380 M455 445 H810 V560"></path><rect height="30" width="75" x="380" y="430"></rect><path d="M225 540 H605 M225 540 V590"></path><path d="M170 570 H225 M170 570 V635 H208" marker-end="url(#arrow)"></path><rect height="90" width="34" x="208" y="590"></rect><path d="M225 680 V725 M225 770 V810 M202 810 H248 M208 817 H242 M215 824 H235"></path><rect height="45" width="30" x="210" y="725"></rect><path d="M625 40 L625 160 L755 100 Z M755 100 H810 H900"></path><circle cx="900" cy="100" r="6"></circle><path d="M625 130 H570 V235 H600 M570 235 V335"></path><path d="M570 235 H665 M690 235 H810 V100 M665 216 V254 M690 216 V254"></path><path d="M570 335 H650 M730 335 H810 V235"></path><rect height="30" width="80" x="650" y="320"></rect><path d="M605 495 L605 625 L735 560 Z M735 560 H810 M810 560 V640 H570 V595 H605"></path></g><g fill="#243b53" transform="translate(0,-18)"><circle cx="315" cy="90" r="5"></circle><circle cx="570" cy="235" r="5"></circle><circle cx="570" cy="335" r="5"></circle><circle cx="810" cy="100" r="5"></circle><circle cx="225" cy="445" r="5"></circle><circle cx="225" cy="540" r="5"></circle><circle cx="225" cy="570" r="5"></circle><circle cx="810" cy="560" r="5"></circle></g><g fill="#243b53" font-family="system-ui,sans-serif" font-size="24" transform="translate(0,-18)"><text x="42" y="62">Vin</text><text x="150" y="62">R1</text><text x="345" y="235">RV1</text><text font-size="18" x="278" y="174">1</text><text font-size="18" x="202" y="222">2</text><text font-size="18" x="278" y="300">3</text><text x="153" y="389">C1</text><text x="153" y="500">C2</text><text x="404" y="420">R2</text><text x="655" y="310">R3</text><text x="662" y="202">C3</text><text x="255" y="640">RV2</text><text x="250" y="757">R4</text><text font-size="18" x="248" y="590">1</text><text font-size="18" x="148" y="628">2</text><text font-size="18" x="248" y="690">3</text><text font-size="23" x="638" y="91">+</text><text font-size="23" x="638" y="127">−</text><text font-size="20" x="670" y="91">3</text><text font-size="20" x="670" y="127">2</text><text x="766" y="91">1</text><text x="835" y="75">Vout</text><text font-size="23" x="615" y="545">+</text><text font-size="23" x="615" y="587">−</text><text font-size="20" x="648" y="545">5</text><text font-size="20" x="648" y="587">6</text><text x="744" y="551">7</text></g></svg></div><p class="caption">オペアンプの電源端子は省略しています。</p></section><div class="dashboard-right"><section class="panel"><h2>部品定数</h2><div class="inputs" id="inputs"></div></section></div></div><section class="panel graph-panel"><h2>周波数特性（20 Hz〜20 kHz）</h2><div class="plot-wrap"><canvas aria-label="周波数特性グラフ" id="plot"></canvas><div aria-hidden="true" class="plot-tooltip" id="plot-tooltip"></div></div><p class="caption">横軸：周波数（対数）／縦軸：Vout/Vin（dB）。グラフは入力値の変更に応じて更新されます。カーソルを合わせるとHzとdBを表示します。</p></section></div><section class="panel"><h2>計算結果</h2><div class="results"><div class="result"><span>最大ゲイン</span><strong id="maxgain">—</strong></div><div class="result"><span>最大ゲイン周波数</span><strong id="maxfreq">—</strong></div><div class="result"><span>最小ゲイン</span><strong id="mingain">—</strong></div><div class="result"><span>最小ゲイン周波数</span><strong id="minfreq">—</strong></div></div><div aria-live="polite" id="error"></div></section><section class="panel"><h2>中心周波数の計算式</h2><div class="formula">
+<p><strong>LC回路の基本式</strong></p>
+<div aria-label="f0 = 1 / (2π√(LC))" class="math-display"><i>f</i><sub>0</sub> = <span class="math-frac"><span class="math-num">1</span><span class="math-den">2π<span class="math-sqrt"><span class="math-root">√</span><span class="math-radicand"><i>LC</i></span></span></span></span></div>
+<p>L：インダクタンス（H）、C：静電容量（F）、f<sub>0</sub>：共振周波数（Hz）</p>
+<p><strong>疑似インダクタ回路の中心周波数（近似）</strong></p>
+<div aria-label="f0 ≈ 1 / (2π√(C1 C2 R2 RV2))" class="math-display"><i>f</i><sub>0</sub> ≈ <span class="math-frac"><span class="math-num">1</span><span class="math-den">2π<span class="math-sqrt"><span class="math-root">√</span><span class="math-radicand"><i>C</i><sub>1</sub><i>C</i><sub>2</sub><i>R</i><sub>2</sub>(<i>R</i><sub>V2</sub>+<i>R</i><sub>4</sub>)</span></span></span></span></div>
+<p>等価インダクタンス <code>L<sub>eq</sub> ≈ C2 × R2 × (R<sub>V2</sub> + R4)</code> をLC共振式に代入した近似です。<code>(R<sub>V2</sub> + R4) ≫ R2</code> かつ低周波近似が成り立つ場合の目安で、実際のEQのピーク・ディップ周波数とは一致しないことがあります。R<sub>V2</sub> はRV2の有効抵抗です。R4はRV2の3番端子とグランドの間に直列接続されています。</p>
+</div></section><section class="panel"><h2>計算式・疑似インダクタの近似</h2><div class="formula">
+<p>下段のオペアンプを理想電圧フォロワとすると、C1下端から下段を見た入力インピーダンスは、<br/>
+<span class="math-inline"><i>Z</i><sub>g</sub>(s) = <span class="math-frac"><span class="math-num"><i>R</i><sub>2</sub>(1 + s<i>C</i><sub>2</sub>(<i>R</i><sub>V2</sub>+<i>R</i><sub>4</sub>))</span><span class="math-den">1 + s<i>C</i><sub>2</sub><i>R</i><sub>2</sub></span></span></span>、<code>s = j2πf</code> です。</p>
+<p>低周波での近似：<code>Z<sub>g</sub>(s) ≈ R2 + sL<sub>eq</sub></code>、<code>L<sub>eq</sub> = C2 × R2 × (R<sub>V2</sub> + R4 − R2)</code>。<br/>
+<code>(R<sub>V2</sub> + R4) ≫ R2</code> なら <code>L<sub>eq</sub> ≈ C2 × R2 × (R<sub>V2</sub> + R4)</code>（単位：H）。この近似は <code>2πf C2 R2 ≪ 1</code> の範囲に限ります。</p>
+<p>上段も含めたグラフは近似Lではなく、回路の複素節点方程式を各周波数で解き、<code>G(f) = 20 log₁₀ |Vout/Vin|</code> により求めています。RV1は上端から下端への分割抵抗として扱います。</p>
+<p>RV2の1・2番短絡時は、3番端子までの抵抗 <code>R<sub>V2</sub> = RV2総抵抗 × (1 − ワイパー位置/100)</code> とします（0%＝1番側、100%＝3番側）。Linearは回転位置に比例、Logは50%位置で1番端子からの抵抗が約10%となるオーディオカーブです。</p>
+<p id="inductance">低周波近似等価L：—</p>
+</div></section>
+<p class="note">計算条件：理想オペアンプ、無限大の入力インピーダンス、ゼロ出力インピーダンスを仮定した小信号解析です。実機の電源電圧・バイアス・オペアンプ帯域・飽和・部品誤差は含みません。</p>
+<dialog class="help-dialog" id="help-dialog" aria-labelledby="help-title">
+ <div class="help-heading"><h2 id="help-title">使い方・説明書</h2><button class="help-close" id="help-close" type="button" aria-label="説明書を閉じる">×</button></div>
+ <div class="help-content">
+  <p><strong>疑似インダクタ回路シュミレーター</strong>は、オペアンプを使用したジャイレータ／アクティブイコライザー回路の周波数特性を確認するためのツールです。</p>
+  <p><strong>使用環境：</strong>PCのブラウザで御使用ください。インストール不要で、オフラインでも動作します。</p>
+  <h3>基本操作</h3>
+  <ol><li>R・C・RVの数値欄に部品の値を入力します。</li><li>抵抗は Ω、kΩ、MΩ、コンデンサは pF、nF、µF から単位を選択します。</li><li>RV1・RV2のスライダーを動かし、0%〜100%の位置を調整します。</li><li>各RV名の下で <strong>Linear</strong> または <strong>Log</strong> を選択します。</li><li>変更に応じてグラフと計算結果が自動更新されます。グラフにカーソルを合わせると周波数（Hz／kHz）とゲイン（dB）を確認できます。</li></ol>
+  <h3>RV1・RV2のカーブ</h3>
+  <p><strong>Linear：</strong>スライダーの位置に比例して抵抗比が変わります。50%で1番端子からワイパーまでの抵抗が全体の50%になります。</p>
+  <p><strong>Log：</strong>オーディオ用対数カーブの近似です。</p>
+  <p>Logカーブは市販品の実測特性を厳密に再現するものではありません。</p>
+  <h3>周波数特性の読み方</h3>
+  <p>横軸は20 Hz〜20 kHzの対数周波数目盛り、縦軸はVout/Vinのゲイン（dB）です。0 dBは入出力の振幅が等しい状態、プラスは増幅、マイナスは減衰を示します。</p>
+  <p>計算結果には、表示範囲内の最大ゲイン・最小ゲインと、その周波数を表示します。RV2を動かすとピークやディップの位置が変化する様子を確認できます。</p>
+  <h3>中心周波数の計算式</h3>
+  <p>LC共振回路の基本式：</p>
+  <div class="math-display" aria-label="f0 = 1 / (2π√(LC))"><i>f</i><sub>0</sub> = <span class="math-frac"><span class="math-num">1</span><span class="math-den">2π<span class="math-sqrt"><span class="math-root">√</span><span class="math-radicand"><i>LC</i></span></span></span></span></div>
+  <p>疑似インダクタの低周波近似（R<sub>V2,eff</sub>はRV2の有効抵抗）：</p>
+  <p><strong>L<sub>eq</sub> = C<sub>2</sub> R<sub>2</sub> (R<sub>V2,eff</sub> + R<sub>4</sub> − R<sub>2</sub>)</strong></p>
+  <p>R<sub>V2,eff</sub> + R<sub>4</sub> ≫ R<sub>2</sub> の場合、中心周波数の目安は次のとおりです。</p>
+  <div class="math-display" aria-label="f0 approximately 1 / (2π√(C1 C2 R2 (RV2 effective + R4)))"><i>f</i><sub>0</sub> ≈ <span class="math-frac"><span class="math-num">1</span><span class="math-den">2π<span class="math-sqrt"><span class="math-root">√</span><span class="math-radicand"><i>C</i><sub>1</sub><i>C</i><sub>2</sub><i>R</i><sub>2</sub>(<i>R</i><sub>V2,eff</sub> + <i>R</i><sub>4</sub>)</span></span></span></span></div>
+  <p>これは近似式であり、グラフのピーク・ディップ周波数と必ずしも一致しません。周波数特性グラフは回路全体の理想オペアンプ交流解析から計算しています。</p>
+  <h3>使用上の注意</h3>
+  <ul><li>理想オペアンプの小信号モデルです。実機の電源電圧、帯域、飽和、バイアス、部品誤差などは反映していません。</li><li>部品値には0より大きい数値を入力してください。</li><li>グラフと最大・最小ゲインの検索範囲は20 Hz〜20 kHzです。</li><li>設定の保存・読み込み機能はありません。</li></ul>
+ </div>
+</dialog>
+</main><script>
+const parts=[['R1',10,'kΩ','R'],['R2',4.7,'kΩ','R'],['R3',4.7,'kΩ','R'],['R4',10,'kΩ','R'],['C1',10,'nF','C'],['C2',10,'nF','C'],['C3',100,'pF','C'],['RV1',10,'kΩ','R'],['RV2',1,'MΩ','R']];const units={R:{'Ω':1,'kΩ':1e3,'MΩ':1e6},C:{'pF':1e-12,'nF':1e-9,'µF':1e-6}};const holder=document.getElementById('inputs');for(const [name,value,unit,type] of parts){const el=document.createElement('div');el.className='field';el.innerHTML=`<label for="v${name}">${name}</label><div class="entry"><input id="v${name}" type="number" min="0.000001" step="any" value="${value}" aria-label="${name}の値"><select id="u${name}" aria-label="${name}の単位">${Object.keys(units[type]).map(u=>`<option ${u===unit?'selected':''}>${u}</option>`).join('')}</select></div>`;holder.appendChild(el)}const pos=document.createElement('div');pos.className='field slider-field';pos.innerHTML='<div class="slider-row"><div class="slider-control-label"><label for="rv1pos">RV1</label><select class="taper-select" id="rv1curve" aria-label="RV1のカーブ"><option value="linear">Linear</option><option value="log">Log</option></select></div><div class="slider-track"><input type="range" min="0" max="100" value="50" id="rv1pos"><small class="slider-percent"><span>0%</span><span id="posLabel">50%</span><span>100%</span></small></div></div>';holder.appendChild(pos);const pos2=document.createElement('div');pos2.className='field slider-field';pos2.innerHTML='<div class="slider-row"><div class="slider-control-label"><label for="rv2pos">RV2</label><select class="taper-select" id="rv2curve" aria-label="RV2のカーブ"><option value="linear">Linear</option><option value="log">Log</option></select></div><div class="slider-track"><input type="range" min="0" max="100" value="50" id="rv2pos"><small class="slider-percent"><span>0%</span><span id="pos2Label">50%</span><span>100%</span></small></div></div>';holder.appendChild(pos2);
+const C=(re=0,im=0)=>[re,im],add=(a,b)=>[a[0]+b[0],a[1]+b[1]],sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],mul=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]],div=(a,b)=>{let d=b[0]*b[0]+b[1]*b[1];return [(a[0]*b[0]+a[1]*b[1])/d,(a[1]*b[0]-a[0]*b[1])/d]},mag=a=>Math.hypot(...a);
+// Unknown nodes: A(+3), B(-2), W(RV1 wiper), D(C1/C2/R2), E(+5), O(Vout), F(pin7).
+function solve(f,p){const n=7,A=Array.from({length:n},()=>Array.from({length:n+1},()=>C()));const yR=r=>C(1/r),yC=c=>C(0,2*Math.PI*f*c);function branch(i,j,y){if(i>=0)A[i][i]=add(A[i][i],y);if(j>=0)A[j][j]=add(A[j][j],y);if(i>=0&&j>=0){A[i][j]=sub(A[i][j],y);A[j][i]=sub(A[j][i],y)}}function toVin(i,y){A[i][i]=add(A[i][i],y);A[i][n]=add(A[i][n],y)}toVin(0,yR(p.R1));branch(0,2,yR(Math.max(1e-9,p.RV1*p.position)));branch(2,1,yR(Math.max(1e-9,p.RV1*(1-p.position))));branch(2,3,yC(p.C1));branch(3,4,yC(p.C2));branch(3,6,yR(p.R2));branch(4,-1,yR(p.RV2effective+p.R4));branch(1,5,add(yR(p.R3),yC(p.C3))); // replace output-node KCL rows with ideal amplifier constraints
+A[5]=Array.from({length:n+1},()=>C());A[5][1]=C(1);A[5][0]=C(-1); // B=A
+A[6]=Array.from({length:n+1},()=>C());A[6][6]=C(1);A[6][4]=C(-1); // F=E
+for(let k=0;k<n;k++){let pivot=k;for(let i=k+1;i<n;i++)if(mag(A[i][k])>mag(A[pivot][k]))pivot=i;if(mag(A[pivot][k])<1e-20)return null;[A[k],A[pivot]]=[A[pivot],A[k]];let d=A[k][k];for(let j=k;j<=n;j++)A[k][j]=div(A[k][j],d);for(let i=0;i<n;i++){if(i===k)continue;let t=A[i][k];for(let j=k;j<=n;j++)A[i][j]=sub(A[i][j],mul(t,A[k][j]))}}return A[5][n]}
+// Linear: x; Log (audio taper): 50% rotation gives 10% resistance from terminal 1.
+function taper(x,kind){return kind==='log'?(Math.pow(81,x)-1)/80:x}
+function params(){let p={};for(const [name,, ,type] of parts){const v=Number(document.getElementById('v'+name).value);if(!Number.isFinite(v)||v<=0)throw Error(name+'は0より大きい値を入力してください。');p[name]=v*units[type][document.getElementById('u'+name).value]}p.position=Math.max(1e-6,Math.min(1-1e-6,taper(Number(document.getElementById('rv1pos').value)/100,document.getElementById('rv1curve').value)));p.rv2position=taper(Number(document.getElementById('rv2pos').value)/100,document.getElementById('rv2curve').value);p.RV2effective=Math.max(1e-6,p.RV2*(1-p.rv2position));return p}
+const plotState={data:null,hover:null,bounds:null};
+function plotFrequency(x,b){return 20*Math.pow(1000,(x-b.L)/b.PW)}
+function formatFrequency(f){return f>=1000?(f/1000).toFixed(f<10000?2:1)+' kHz':f.toFixed(f<100?1:0)+' Hz'}
+function draw(data){
+ const canvas=document.getElementById('plot'),ctx=canvas.getContext('2d'),rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+ canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+ let w=rect.width,h=rect.height,L=55,R=17,T=17,B=43,PW=w-L-R,PH=h-T-B;
+ const vals=data.map(x=>x.db);let min=Math.floor((Math.min(...vals)-3)/10)*10,max=Math.ceil((Math.max(...vals)+3)/10)*10;
+ if(max-min<20){min-=10;max+=10}min=Math.max(-180,min);max=Math.min(180,max);if(max<=min){min=-20;max=20}
+ const fy=y=>T+(max-y)/(max-min)*PH,fx=f=>L+(Math.log10(f/20)/3)*PW;
+ plotState.bounds={L,R,T,B,PW,PH,w,h,fy,fx};
+ ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+ ctx.font='11px system-ui';ctx.lineWidth=1;ctx.fillStyle='#64748b';ctx.textAlign='right';
+ for(let db=Math.ceil(min/10)*10;db<=max;db+=10){let y=fy(db);ctx.strokeStyle='#e4ebf0';ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();ctx.fillText(db+' dB',L-7,y+4)}
+ // Minor logarithmic ticks: 20,30,...90,100,200,...900,1k,...20k.
+ const majors=new Set([20,50,100,200,500,1000,2000,5000,10000,20000]);
+ const ticks=[];for(let decade=10;decade<=10000;decade*=10){for(let m=1;m<=9;m++){const f=m*decade;if(f>=20&&f<=20000)ticks.push(f)}}ticks.push(20000);
+ for(const f of ticks){const x=fx(f),major=majors.has(f);ctx.strokeStyle=major?'#d6e1e8':'#edf2f6';ctx.beginPath();ctx.moveTo(x,T);ctx.lineTo(x,h-B);ctx.stroke();ctx.strokeStyle=major?'#8da5b5':'#b8c8d2';ctx.beginPath();ctx.moveTo(x,h-B);ctx.lineTo(x,h-B+(major?7:4));ctx.stroke()}
+ ctx.textAlign='center';ctx.fillStyle='#64748b';ctx.font=(w<520?'10':'11')+'px system-ui';
+ const labels=w<520?[20,50,100,200,500,1000,2000,5000,10000,20000]:[20,30,50,70,100,200,300,500,700,1000,2000,3000,5000,7000,10000,20000];
+ // Suppress overlapping labels while retaining all fine grid ticks.
+ let lastRight=-Infinity;for(const f of labels){let x=fx(f),label=f>=1000?(f/1000)+'k':String(f),tw=ctx.measureText(label).width;if(x-tw/2<lastRight+7&&f!==20000)continue;ctx.fillText(label,x,h-B+22);lastRight=x+tw/2}
+ if(min<=0&&max>=0){ctx.strokeStyle='#a6b7c3';ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(L,fy(0));ctx.lineTo(w-R,fy(0));ctx.stroke();ctx.setLineDash([])}
+ ctx.save();ctx.beginPath();ctx.rect(L,T,PW,PH);ctx.clip();ctx.strokeStyle='#147e9d';ctx.lineWidth=2.5;ctx.beginPath();data.forEach((d,i)=>{let x=fx(d.f),y=fy(d.db);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();
+ if(plotState.hover){const {f,db}=plotState.hover,x=fx(f),y=fy(db);ctx.strokeStyle='#b35d24';ctx.lineWidth=1;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(x,T);ctx.lineTo(x,h-B);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#fff';ctx.strokeStyle='#b35d24';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,5,0,2*Math.PI);ctx.fill();ctx.stroke()}
+ ctx.restore();
+}
+function hoverPlot(event){if(!plotState.data)return;const canvas=document.getElementById('plot'),r=canvas.getBoundingClientRect(),b=plotState.bounds;if(!b)return;const x=event.clientX-r.left,y=event.clientY-r.top,tip=document.getElementById('plot-tooltip');if(x<b.L||x>b.w-b.R||y<b.T||y>b.h-b.B){plotState.hover=null;tip.style.display='none';draw(plotState.data);return}
+ const f=plotFrequency(x,b);let db;try{const v=solve(f,params());db=20*Math.log10(mag(v));if(!Number.isFinite(db))return}catch(e){return}
+ plotState.hover={f,db};draw(plotState.data);tip.textContent=formatFrequency(f)+' / '+db.toFixed(2)+' dB';tip.style.display='block';const tw=tip.offsetWidth,th=tip.offsetHeight;tip.style.left=Math.max(0,Math.min(b.w-tw,x+13))+'px';tip.style.top=Math.max(0,Math.min(b.h-th,y-45))+'px';
+}
+const plotCanvas=document.getElementById('plot');plotCanvas.addEventListener('pointermove',hoverPlot);plotCanvas.addEventListener('pointerleave',()=>{plotState.hover=null;document.getElementById('plot-tooltip').style.display='none';if(plotState.data)draw(plotState.data)});
+function update(){document.getElementById('posLabel').textContent=document.getElementById('rv1pos').value+'%';document.getElementById('pos2Label').textContent=document.getElementById('rv2pos').value+'%';try{const p=params(),data=[];const leq=p.C2*p.R2*(p.RV2effective+p.R4-p.R2);document.getElementById('inductance').textContent='低周波近似等価L：'+(leq>0?(leq>=1?leq.toPrecision(4)+' H':(leq*1000).toPrecision(4)+' mH'):'インダクタ性なし（L ≦ 0）')+' ／ RV2有効抵抗：'+p.RV2effective.toPrecision(4)+' Ω ／ R4込み：'+(p.RV2effective+p.R4).toPrecision(4)+' Ω';for(let i=0;i<=400;i++){let f=20*Math.pow(1000,i/400),v=solve(f,p);if(!v||!Number.isFinite(mag(v))||mag(v)===0)throw Error('この定数では計算できません。');data.push({f,db:20*Math.log10(mag(v))})}let mx=data.reduce((a,b)=>a.db>b.db?a:b),mn=data.reduce((a,b)=>a.db<b.db?a:b);document.getElementById('maxgain').textContent=mx.db.toFixed(2)+' dB';document.getElementById('mingain').textContent=mn.db.toFixed(2)+' dB';document.getElementById('maxfreq').textContent=Math.round(mx.f)+' Hz';document.getElementById('minfreq').textContent=Math.round(mn.f)+' Hz';document.getElementById('error').textContent='';window.lastData=data;plotState.data=data;draw(data)}catch(e){document.getElementById('error').textContent=e.message}}document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',update));window.addEventListener('resize',()=>{if(window.lastData)draw(window.lastData)});update();
+
+// In-app README: browser-native modal, no external dependencies.
+const helpDialog=document.getElementById('help-dialog');
+document.getElementById('help-open').addEventListener('click',()=>helpDialog.showModal());
+document.getElementById('help-close').addEventListener('click',()=>helpDialog.close());
+helpDialog.addEventListener('click',e=>{if(e.target===helpDialog)helpDialog.close()});
+</script></body></html>

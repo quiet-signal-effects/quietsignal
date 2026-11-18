@@ -38,7 +38,15 @@
       border-right: 2px solid #24140e;
       transition: background 0.2s, color 0.2s;
     }
-    .app-card:last-child { border-right: none; }
+    /* 右列のカードは右罫線なし */
+    .app-card:nth-child(2n) { border-right: none; }
+    /* 2行目以降のカードは上に罫線 */
+    .app-card:nth-child(n+3) { border-top: 2px solid #24140e; }
+    /* 最後のカードが1枚だけ余る場合は、横幅いっぱいに広げる */
+    .app-card:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      border-right: none;
+    }
     /* マウスを乗せたときは、うすい水色にする(文字色は変えない) */
     .app-card:hover { background: rgba(221, 231, 221, 0.7); }
 
@@ -120,7 +128,9 @@
 
     @media (max-width: 768px) {
       .app-list { grid-template-columns: 1fr; }
-      .app-card { border-right: none; border-bottom: 2px solid #24140e; }
+      .app-card,
+      .app-card:nth-child(2n) { border-right: none; border-bottom: 2px solid #24140e; }
+      .app-card:nth-child(n+3) { border-top: none; }
       .app-card:last-child { border-bottom: none; }
     }
   </style>
@@ -158,9 +168,9 @@
     </div>
 
     <div class="container">
-      <p style="font-size:0.88rem; opacity:0.65; margin-bottom:2rem;">	
-	 Quiet Siganalが提供するアプリです。<br>
-        「まなびオシロ」はWindows用のZIPファイルをダウンロードし解凍して使います。「コード譜クイック工房」はブラウザで開くだけですぐ使えます。
+      <p style="font-size:0.88rem; opacity:0.65; margin-bottom:2rem;">
+        Quiet Signalが提供するアプリです。<br>
+        「まなびオシロ」はWindows用のZIPファイルをダウンロードし解凍して使います。「コード譜クイック工房」「オペアンプ増幅率計算ツール」「疑似インダクタ回路シミュレーター」はブラウザで開くだけですぐ使えます。
       </p>
 
       <div class="app-list fade-in">
@@ -184,6 +194,39 @@
             <div class="app-num">02</div>
           </div>
           <div class="app-desc">コード譜をクイックに作れるツール。メジャー、マイナー、セブンスはもちろん、基本的なコードネームにはすべて対応。<br>繰り返し記号、セクション入力、小節数の変更、A4用紙に入る段数の変更、×回数、1小節を4分割まで入力できます。部分的な小節数の変更も可能。印刷とPDF出力に対応しています。<br>スマホでもPCでもブラウザで開いて使えます。ホーム画面に追加すればアプリのように使え、ネット環境がなくても動きます</div>
+          <div class="app-note">対応:ブラウザ(ダウンロード・インストール不要)<br>使い方:このカードを押すと、そのまま開きます</div>
+          <div class="app-open">Open in Browser →</div>
+        </a>
+
+        <a class="app-card" href="opamp_gain_calculator.html">
+          <div class="app-head">
+            <!-- アイコン画像を用意したら、下の<svg>を <img class="app-icon" src="images/app-opamp-calc.png" ...> に差し替えてください -->
+            <svg class="app-icon" viewBox="0 0 80 80" role="img" aria-label="オペアンプ増幅率計算ツール アイコン" xmlns="http://www.w3.org/2000/svg">
+              <rect width="80" height="80" fill="#2f7f8c"/>
+              <path d="M20 10 L20 70 L68 40 Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M4 30 H20 M4 50 H20 M68 40 H76" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+              <path d="M28 30 H34 M31 27 V33 M28 50 H34" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <div class="app-name">オペアンプ増幅率計算ツール</div>
+            <div class="app-num">03</div>
+          </div>
+          <div class="app-desc">オペアンプの電圧増幅率とゲイン(dB)の計算ツール。非反転増幅回路と反転増幅回路を切り替えられます。<br>回路図を見ながらRf・Rg・Rinを入力すると増幅率とdBが更新されます。抵抗の単位はΩ・kΩ・MΩから選べます。回路設計の目安にお使いください。<br>画面内の「？ 使い方」に説明書があります。</div>
+          <div class="app-note">対応:ブラウザ(ダウンロード・インストール不要)<br>使い方:このカードを押すと、そのまま開きます</div>
+          <div class="app-open">Open in Browser →</div>
+        </a>
+
+        <a class="app-card" href="gyrator_eq_interactive_v31.html">
+          <div class="app-head">
+            <!-- アイコン画像を用意したら、下の<svg>を <img class="app-icon" src="images/app-gyrator.png" ...> に差し替えてください -->
+            <svg class="app-icon" viewBox="0 0 80 80" role="img" aria-label="疑似インダクタ回路シミュレーター アイコン" xmlns="http://www.w3.org/2000/svg">
+              <rect width="80" height="80" fill="#2f7f8c"/>
+              <path d="M4 40 H8 M32 40 H36 A6 6 0 0 1 48 40 A6 6 0 0 1 60 40 A6 6 0 0 1 72 40 H76" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="8" y="33" width="24" height="14" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="miter"/>
+            </svg>
+            <div class="app-name">疑似インダクタ回路シミュレーター</div>
+            <div class="app-num">04</div>
+          </div>
+          <div class="app-desc">オペアンプで作る疑似インダクタ(シミュレーテッドインダクタ）回路・ジャイレータ回路を使ったアクティブイコライザーのシミュレーターです。<br>部品定数を入力すると、20Hz〜20kHzの範囲で回路の周波数特性を確認できます。<br>画面内の「？ 使い方」に説明書があります。</div>
           <div class="app-note">対応:ブラウザ(ダウンロード・インストール不要)<br>使い方:このカードを押すと、そのまま開きます</div>
           <div class="app-open">Open in Browser →</div>
         </a>
