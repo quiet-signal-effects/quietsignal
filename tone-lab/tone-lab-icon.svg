@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" role="img" aria-label="トーン回路シミュレーター">
+<rect x="1" y="1" width="78" height="78" rx="17" fill="#F2B52B" stroke="#D49A1D" stroke-width="1.5"/>
+<path d="M13 40 H23 L30 18 L43 62 L52 31 L58 40 H67" fill="none" stroke="#1D4ED8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="13" cy="40" r="2.2" fill="#1D4ED8"/><circle cx="67" cy="40" r="2.2" fill="#1D4ED8"/>
+</svg>
