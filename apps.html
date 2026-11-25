@@ -66,6 +66,48 @@
       flex-shrink: 0;
     }
 
+    .app-icon.gatsi-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10%;
+      border: 1px solid #135f6d;
+      border-radius: 22%;
+      background: #2f7f8c;
+      color: #fff;
+    }
+
+    .gatsi-icon i {
+      position: relative;
+      height: 49%;
+      width: 2px;
+      background: currentColor;
+    }
+
+    .gatsi-icon i::after {
+      content: "";
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      width: 7px;
+      height: 5px;
+      border-radius: 1px;
+      background: currentColor;
+      transform: translateX(-50%);
+    }
+
+    .gatsi-icon i:nth-child(2)::after { top: 63%; }
+    .gatsi-icon i:nth-child(3)::after { top: 40%; }
+
+    .app-icon.gatsi-icon { position: relative; }
+    .gatsi-icon::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: url("gatsi/GATSi_icon.png") center / contain no-repeat;
+    }
+
     .app-num {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 2.4rem;
@@ -170,7 +212,7 @@
     <div class="container">
       <p style="font-size:0.88rem; opacity:0.65; margin-bottom:2rem;">
         Quiet Signalが提供するアプリです。<br>
-        「まなびオシロ」はWindows用のZIPファイルをダウンロードし解凍して使います。「コード譜クイック工房」「オペアンプ増幅率計算ツール」「疑似インダクタ回路シミュレーター」「トーン回路シミュレーター」はブラウザで開くだけですぐ使えます。
+        「まなびオシロ」はWindows用のZIPファイルをダウンロードし解凍して使います。「コード譜クイック工房」「オペアンプ増幅率計算ツール」「疑似インダクタ回路シミュレーター」「トーン回路シミュレーター」「GATSi（ガッツィ）」はブラウザで開くだけですぐ使えます。
       </p>
 
       <div class="app-list fade-in">
@@ -243,6 +285,17 @@
             <div class="app-num">05</div>
           </div>
           <div class="app-desc">エフェクターを一覧から選び、トーン回路の定数を操作して周波数特性をグラフで観察できるツール。<br>20Hz〜20kHzのグラフはスライダーで調整でき、変更前後の特性を重ねて比較できます。<br>回路図の確認も可能。</div>
+          <div class="app-note">対応:ブラウザ(ダウンロード・インストール不要)<br>使い方:このカードを押すと、そのまま開きます</div>
+          <div class="app-open">Open in Browser →</div>
+        </a>
+
+        <a class="app-card" href="gatsi/guitar-amp-tone-simulator.html">
+          <div class="app-head">
+            <span class="app-icon gatsi-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div class="app-name">Guitar Amp Tone Simulator【GATSi】（ガッツィ）</div>
+            <div class="app-num">06</div>
+          </div>
+          <div class="app-desc">ギターアンプのトーン回路を選び、Bass／Middle／Trebleなどのツマミを動かしながら、回路図と周波数特性の変化を確認できるシミュレーターです。設定を重ねて比較できます。</div>
           <div class="app-note">対応:ブラウザ(ダウンロード・インストール不要)<br>使い方:このカードを押すと、そのまま開きます</div>
           <div class="app-open">Open in Browser →</div>
         </a>
