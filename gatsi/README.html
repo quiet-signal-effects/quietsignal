@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使い方 | Guitar Amp Tone Simulator【GATSi】（ガッツィ）</title>
+<style>
+:root { color-scheme: light dark; font-family: system-ui,sans-serif; line-height: 1.75; }
+body { margin: 0; background: light-dark(#f3f7fb,#121820); color: light-dark(#17283d,#e1eaf3); }
+main { max-inline-size: 48rem; margin: auto; padding: clamp(1rem,5vw,3rem); }
+header { padding-block-end: 1.4rem; border-block-end: 2px solid light-dark(#abc7e7,#4d6788); }
+h1 { font-size: clamp(1.5rem,4vw,2.2rem); line-height: 1.4; margin: .7rem 0; }
+h2 { font-size: 1.25rem; margin-block-start: 2rem; }
+p { margin-block: .7rem; }
+nav ul { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; list-style: none; padding: 0; }
+li + li { margin-block-start: .25rem; }
+nav li + li { margin: 0; }
+a { color: light-dark(#184f8b,#a9d3ff); text-underline-offset: .18em; }
+pre { padding: .75rem 1rem; background: light-dark(#e4effb,#202d3d); overflow: auto; }
+</style>
+</head>
+<body>
+<main>
+<header>
+<a href="guitar-amp-tone-simulator.html">← シミュレーターを開く</a>
+<h1>Guitar Amp Tone Simulator【GATSi】（ガッツィ）の使い方</h1>
+<p>GATSi（ガッツィ）は、ギターアンプのトーン回路をブラウザで調べるシミュレーターです。アンプやチャンネルを選び、Bass／Middle／Trebleなどのツマミを動かしながら、回路図と周波数特性の変化を確認できます。</p>
+<nav aria-label="目次"><ul>
+<li><a href="#start">基本操作</a></li>
+<li><a href="#graph">グラフの見方</a></li>
+<li><a href="#compare">比較・測定</a></li>
+<li><a href="#sources">回路の資料と計算範囲</a></li>
+</ul></nav>
+</header>
+<section id="start">
+<h2>基本操作</h2>
+<ol>
+<li>画面上部で「ブランド」「機種」「モード／CH」を順に選びます。ブランドの矢印を押すと一覧が2列で開き、左列の上から下、続いて右列の上から下の順に並びます。</li>
+<li>グラフ下のツマミを動かすと、右の周波数特性と、左の回路図の対応する部品表示が更新されます。ツマミとスイッチの種類はモードによって異なります。</li>
+<li>回路図はホイールまたは「−」「＋」で拡大・縮小し、ドラッグで移動できます。「全体表示」で表示を戻せます。複数の回路段を持つモードは、回路図上部のメニューから表示する段を選べます。</li>
+</ol>
+</section>
+<section id="graph">
+<h2>グラフの見方</h2>
+<p>横軸は周波数（Hz）、縦軸は利得（dB）です。実線が現在の設定、破線が比較対象です。グラフ上で周波数を選ぶか、詳細設定の「周波数を直接入力（Hz）」を使うと、その点の利得を確認できます。</p>
+<p>表示される場合、Bass／Trebleの点線はノブを2から8に動かしたときの帯域両端の応答差の中間点を示します。Middleの点線は応答差が最も大きい帯域内の周波数です。モデルの応答から求めた推定値や、資料に記載された公称値を区別して表示します。</p>
+<p>「弦とフレットの基音・倍音」では、チューニングとフレットを選び、基音や倍音に対応する周波数での利得を確認できます。</p>
+</section>
+<section id="compare">
+<h2>比較・測定</h2>
+<ul>
+<li>「比較・測定・部品値の詳細設定」の「破線で比較」で比較対象を選びます。「現在の設定を比較用に固定」を使うと、変更前後を比べられます。</li>
+<li>周波数特性の形を比べるには「レベルをそろえる」をオンにし、基準周波数を指定します。差を数値で見たい場合は「比較対象との差を表示」を使います。</li>
+<li>実測値は「測定データ・変更後」に読み込みます。2つの実測値を差分比較する場合は、同条件で取った基準データも読み込みます。対応形式はCSV・TSV・TXT・FRDで、各4 MBまでです。列は周波数（Hz）、レベル（dB）、位相（度、省略可）の順です。</li>
+</ul>
+<p>CSVの例</p>
+<pre><code>100,-12.4
+1000,-5.8
+5000,-8.1</code></pre>
+</section>
+<section id="sources">
+<h2>回路の資料と計算範囲</h2>
+<p>資料があるモードでは、回路図の「参照資料」から元の資料を開けます。画面の図はシミュレーター用に描いたモデル回路図です。モデルの説明には測定点や近似条件を記載しています。</p>
+<p>グラフは小信号の周波数応答です。モデルによって前後段・負荷・テーパーの扱いが異なります。歪みやスピーカー、キャビネットを含めた実際の音は、周波数応答だけでは再現できません。</p>
+</section>
+</main>
+</body>
+</html>
