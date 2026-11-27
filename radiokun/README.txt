@@ -1,7 +1,7 @@
 パタパタ・ラジオくん 〜ノイズエッグバスターズ〜
 
-ZIPを展開し、patapata-radio フォルダーごとHTTPSのウェブサイトに置きます。
-例 https://quietsignal.jp/patapata-radio/
+ZIPを展開し、radiokun フォルダーごとHTTPSのウェブサイトに置きます。
+例 https://quietsignal.jp/radiokun/
 PCのChromeやEdgeでは、ブラウザのインストール操作を使います。
 AndroidのChromeではメニューからホーム画面に追加またはインストールします。
 iPhoneではSafariの共有メニューからホーム画面に追加します。
