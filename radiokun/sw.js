@@ -1,6 +1,6 @@
 const scope = self.registration.scope;
 const prefix = 'patapata-radio:' + scope;
-const version = prefix + ':v2';
+const version = prefix + ':v13';
 const files = ['index.html', 'manifest.webmanifest', 'icons/shortcut-180.png', 'icons/shortcut-192.png', 'icons/shortcut-512.png', 'icons/shortcut-maskable.png'];
 const urls = new Set(files.map(path => new URL(path, scope).href));
 
